@@ -4,8 +4,7 @@ import { t } from "@/i18n/ui";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const copy = isLocale(lang) ? t(lang) : t("de");
-  return { title: copy.imprintTitle };
+  return { title: t(isLocale(lang) ? lang : "de").imprintTitle };
 }
 
 export default async function ImpressumPage({ params }: { params: Promise<{ lang: string }> }) {
@@ -13,8 +12,9 @@ export default async function ImpressumPage({ params }: { params: Promise<{ lang
   if (!isLocale(raw)) notFound();
   const lang = raw as Locale;
   const copy = t(lang);
+  const [before, after] = copy.imprintP2.split("industrietag-rm.de");
   return (
-    <main>
+    <>
       <section className="page-hero">
         <div className="wrap">
           <h1>{copy.imprintTitle}</h1>
@@ -24,9 +24,9 @@ export default async function ImpressumPage({ params }: { params: Promise<{ lang
         <div className="wrap prose">
           <p>{copy.imprintP1}</p>
           <p>
-            {copy.imprintP2.split("industrietag-rm.de")[0]}
+            {before}
             <a href="https://industrietag-rm.de/">industrietag-rm.de</a>
-            {copy.imprintP2.split("industrietag-rm.de")[1]}
+            {after}
           </p>
           <p>
             {copy.imprintOrganiser}
@@ -39,6 +39,6 @@ export default async function ImpressumPage({ params }: { params: Promise<{ lang
           </p>
         </div>
       </section>
-    </main>
+    </>
   );
 }

@@ -6,8 +6,7 @@ import { pdfHref } from "@/lib/i18n";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const copy = isLocale(lang) ? t(lang) : t("de");
-  return { title: copy.downloadTitle };
+  return { title: t(isLocale(lang) ? lang : "de").downloadTitle };
 }
 
 export default async function DownloadPage({ params }: { params: Promise<{ lang: string }> }) {
@@ -16,26 +15,30 @@ export default async function DownloadPage({ params }: { params: Promise<{ lang:
   const lang = raw as Locale;
   const copy = t(lang);
   return (
-    <main>
+    <>
       <section className="page-hero">
         <div className="wrap">
-          <p className="kicker">{copy.downloadKicker}</p>
+          <Link className="back" href={localizedPath(lang, "/")}>
+            {copy.backHome}
+          </Link>
           <h1>{copy.downloadTitle}</h1>
         </div>
       </section>
       <section className="section">
-        <div className="wrap prose">
-          <p>{copy.downloadIntro}</p>
-          <p>
-            <a className="btn" href={pdfHref(lang)} download>
-              {copy.downloadButton}
-            </a>
-          </p>
-          <p>
-            <Link href={localizedPath(lang, "/")}>{copy.backHome}</Link>
-          </p>
+        <div className="wrap download">
+          <a className="pdf-thumb" href={pdfHref(lang)} download>
+            <img src={lang === "en" ? "/pdf-cover-en.png" : "/pdf-cover.png"} alt="" width={420} height={594} />
+          </a>
+          <div className="prose">
+            <p>{copy.downloadIntro}</p>
+            <p>
+              <a className="btn" href={pdfHref(lang)} download>
+                {copy.downloadButton}
+              </a>
+            </p>
+          </div>
         </div>
       </section>
-    </main>
+    </>
   );
 }

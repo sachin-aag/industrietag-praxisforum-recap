@@ -13,7 +13,7 @@
   },
   "website": "https://industrietag-rm.de/",
   "programme_url": "https://industrietag-rm.de/praxisforum/programm-vortraege/",
-  "transcription_uncertainty": "Die Zusammenfassungen stützen sich auf Live-Transkriptionen (Reachy Mini). Die automatische Spracherkennung ist stellenweise unsicher (Namen und Fachbegriffe oft entstellt). Reachy-Zeitstempel liegen typischerweise rund eine Stunde vor den offiziellen Programmuhrzeiten (vermutlich UTC statt MEZ). Es werden keine wörtlichen Zitate als gesichert ausgegeben.",
+  "transcription_uncertainty": "Die Zusammenfassungen beruhen auf Live-Mitschnitten, die der Roboter Reachy Mini während der Vorträge automatisch transkribiert hat. Weil die Spracherkennung bei Namen und Fachbegriffen nicht immer zuverlässig ist, wurden die Inhalte mit dem öffentlichen Programm abgeglichen. Wo die Zuordnung zu einem Vortrag unsicher ist, steht ein Hinweis. Wörtliche Zitate werden nicht wiedergegeben.",
   "companies": {
     "Wilhelm Schetter GmbH Haustechnik": {
       "url": "https://www.schetter.de/",
@@ -219,7 +219,7 @@
         }
       ],
       "source_notes": "Website nennt Paulowitsch und Wolkenhauer; Flyer nennt zusätzlich Michael Aechtler in der Begrüßung.",
-      "abstract": "Der Bürgermeister von Kernen, Benedikt Paulowitsch, begrüßt gemeinsam mit Gastgeber Heino Wolkenhauer, Geschäftsführer der Wilhelm Schetter GmbH Haustechnik, die Gäste. (Flyer: begrüßt mit Heino Wolkenhauer und Michael Aechtler die Gäste.)",
+      "abstract": "Der Bürgermeister von Kernen, Benedikt Paulowitsch, begrüßt gemeinsam mit Gastgeber Heino Wolkenhauer, Geschäftsführer der Wilhelm Schetter GmbH Haustechnik, die Gäste.",
       "sources": [
         "https://industrietag-rm.de/praxisforum/programm-vortraege/",
         "Flyer_Praxisforum_A6_final_web.pdf",
@@ -227,11 +227,11 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Heino Wolkenhauer eröffnete das Praxisforum und berichtete, dass das gastgebende Unternehmen KI seit etwa einem Jahr nutzt – mit Effizienzgewinnen und einem Wandel von anfänglicher Skepsis hin zu Begeisterung.",
-        "Ziel des Tages sei, Erfahrungen und konkrete Anwendungen zu teilen, Fragen an die Referentinnen und Referenten zu stellen und sich an den Ständen auszutauschen.",
-        "Laut Begrüßung waren über 400 Teilnehmende aus Planung, Industrie, Bau, Wissenschaft und Medien anwesend.",
-        "Bürgermeister Benedikt Paulowitsch würdigte den Mut der Veranstalter, nannte KI eine Chance für Deutschland und stellte Kernen als Vorreiterkommune in der Verwaltung vor.",
-        "Entscheidend für den KI-Einsatz sei die Veränderung von Organisation, Kultur und Haltung – nicht allein die Anschaffung von Werkzeugen."
+        "Gastgeber Heino Wolkenhauer berichtete, dass Schetter seit genau einem Jahr intensiv mit KI arbeitet: Der Einstieg war schwer, heute bringe KI spürbare Effizienzgewinne – aus anfänglicher Sorge wurde Begeisterung.",
+        "Statt die Erfahrungen nur im eigenen Haus zu nutzen, wolle man sie teilen: Die Partner des Tages sind Unternehmen, mit denen Schetter auf diesem Weg zusammengearbeitet hat.",
+        "Rund 400 Gäste aus mehr als 270 Unternehmen waren angemeldet – darunter etwa 140 aus der Planung, je 70 aus Industrie sowie Bau und Handwerk und 40 Architektinnen und Architekten.",
+        "Bürgermeister Benedikt Paulowitsch lobte den unternehmerischen Mut und stellte Kernen als bundesweite KI-Vorreiterkommune vor: KI-Agenten, KI-Protokolle im Gemeinderat und Prozessautomatisierung (RPA) sind im Rathaus Alltag.",
+        "Seine Kernbotschaft: Erst Organisation, Kultur und Haltung fit machen, dann entfaltet KI ihren Nutzen – nur Tools zu kaufen, reicht nicht."
       ],
       "transcript": "notes-1200"
     },
@@ -263,11 +263,11 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Liebl ordnete die Entwicklung von spezialisierten Machine-Learning-Anwendungen über generative KI (Zusammenfassen, Recherchieren, Texte und Bilder erzeugen) hin zu Agenten ein, die Werkzeuge bedienen, planen und Teilaufgaben an Subagenten geben können.",
-        "Werkzeuge allein ändern den Durchsatz oft wenig: In einem im Vortrag gezeigten Simulationsbeispiel sank die Durchlaufzeit merklich erst, wenn Prozesse neu geschnitten werden – nicht nur, wenn einzelne Schritte schneller werden.",
-        "Menschen bleiben in dem skizzierten Betriebsmodell die Instanz, die Ergebnisse bewertet, nachfragt und freigibt, während KI große Teile der Abarbeitung übernimmt.",
-        "Als nächste Generation der Wertschöpfung beschrieb er das Zusammenspiel von Manager-Agenten (kurz- und langfristiges Gedächtnis, Planung, Werkzeuge) mit frei gestaltbaren Agentenstrukturen – und einen entsprechenden Transformations- und Führungsaufwand.",
-        "Sicherheits- und Kontrollfragen (nicht vollständig kontrollierbare Agenten-Setups, Forschungsbeispiele zur Kommunikation zwischen Systemen) wurden als offene Führungsaufgabe angesprochen."
+        "Liebl, der appliedAI vor fast zehn Jahren mitgegründet hat, zeichnete den Weg von spezialisiertem Machine Learning über generative KI hin zu Agenten, die Werkzeuge bedienen, planen und Teilaufgaben an weitere Agenten delegieren.",
+        "Werkzeuge allein ändern wenig: Erst wenn Prozesse Ende-zu-Ende neu gedacht werden, sinkt die Durchlaufzeit wirklich – je breiter man Abläufe infrage stellt, desto größer der Effekt.",
+        "Als Live-Beispiel zeigte er ein Multiagentensystem für Ausschreibungen: Agenten analysieren die Anfrage, kommunizieren mit Lieferanten und vergleichen Angebote; ein Mensch als Tender-Manager gibt frei.",
+        "Im nächsten Reifegrad übernehmen Agenten zunehmend die Steuerung und binden Fachleute gezielt ein; das Wissen des Unternehmens wird zur „organisationalen Intelligenz“.",
+        "Führung muss Raum für Fehler und gemeinsames Lernen schaffen – und KI als Chance zum Neudenken begreifen, wie es in den USA und China bereits geschieht."
       ],
       "transcript": "notes-1216"
     },
@@ -299,10 +299,12 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Aechtler knüpfte an den Befund an, dass über KI viel gesprochen wird, sich im Arbeitsalltag von Planung, Bau und Betrieb aber oft noch wenig ändert – und führte live vor, wie ein Agent in konkreten Büroaufgaben mitarbeitet.",
-        "In der Live-Demo war unter anderem eine Agentenoberfläche zu sehen (auf Eventfotos als „HALLO MICHAEL“ dokumentiert); der Vortrag zeigte typische Tätigkeiten wie Zuhören in Besprechungen, Sortieren von Notizen sowie das Vorbereiten von Angeboten und Terminen.",
-        "Als Beispiel diente das eigene Unternehmen, das nach Aussage des Referenten zu großen Teilen von KI-Agenten getragen wird; sichtbar wurden nötige Daten und Voraussetzungen ebenso wie Grenzen der Automatisierung.",
-        "Der Impuls zielte auf erste konkrete Schritte: vom Ausprobieren ins Handeln kommen und Mitarbeitende mitnehmen, statt bei Tool-Demos stehen zu bleiben."
+        "Aechtler begleitet mit Gamechangerz nach eigenen Angaben 50 bis 70 Unternehmen bei der KI-Einführung – und erlebt, dass meist Menschen, nicht Systeme, den ersten Schritt brauchen.",
+        "Er räumte mit drei Mythen auf: KI nimmt Aufgaben, nicht Jobs; Halluzinationen entstehen meist durch schlecht aufgebaute Systeme; und „das dürfen wir nicht“ (etwa wegen Datenschutz) dürfe keine Ausrede mehr sein – es gibt Lösungen.",
+        "Live zeigte er VELA, das System hinter Gamechangerz als „Zero Person Company“: Jedes Unternehmensziel bekommt einen eigenen Agenten mit Zugriff auf ein lokal betriebenes Firmengedächtnis und einen Werkzeugkasten.",
+        "Gute Ergebnisse entstehen durch Training: erstellen lassen, Feedback geben, wiederholen. Sein Schreibstil wurde aus zehn Jahren LinkedIn und zwölf Jahren E-Mails gelernt; jede ausgehende Mail gibt er weiterhin selbst frei.",
+        "Eine erste Kampagne mit nur 50 gezielten E-Mails brachte 26 Termine – so viele, dass er heute bewusst langsamer und fokussierter vorgeht.",
+        "Sein Rat: mit einem konkreten Fall, Projekt oder einer Abteilung anfangen statt monatelang zu diskutieren – und größer denken."
       ],
       "transcript": "notes-1216"
     },
@@ -335,10 +337,12 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Huber stellte sich als Verantwortliche für Digital Strategy & Culture bei Drees & Sommer vor und rahmte den Impuls unter der Frage, wie aus Daten tatsächlich höhere Unternehmensperformance wird.",
-        "Performance entstehe nicht durch die größte Zahl an KI-Werkzeugen, sondern dadurch, dass Technologie, Daten, Menschen und Prozesse zu einem Wertschöpfungssystem verbunden werden.",
-        "An Folien zur digitalen Transformation (auch fotografisch dokumentiert) zeigte sie, dass Strategie, Zusammenarbeit und Kultur ebenso entscheidend sind wie die technische Ebene.",
-        "Der Vortrag endete mit einem Ausblick auf tiefgreifenden Wandel („Alles wird anders“) und der Aufforderung, Performance über die ganze Organisation zu denken, nicht nur über einzelne Pilotprojekte."
+        "Huber leitet bei Drees & Sommer den Bereich Digital Strategy & Culture und verantwortet die unternehmensweite digitale Transformation des rund 7.000 Mitarbeitende starken Unternehmens.",
+        "Ihre These: Zwei Drittel der Transformation passieren auf der organisatorischen Ebene – Rollen, Kompetenzen, Prozesse und Führung. Ein schnell per KI erstellter Bericht bringt nichts, wenn die Besprechung dazu erst Wochen später stattfindet.",
+        "Drees & Sommer spiegelt seine Digitalorganisation in alle Geschäftsbereiche, mit eigenen Digitalpartnern und kurzen Entscheidungswegen über Digital Boards bis auf Vorstandsebene.",
+        "Für den Kompetenzaufbau gibt es vier Lernfelder – KI, Daten, Cybersicherheit und Soft Skills – sowie Lernen im Arbeitsalltag und ein digitales Mentoring-Programm.",
+        "Entscheidend sei die Wirkung, nicht die eingesparte Zeit: Unternehmen müssen klären, wofür frei werdende Stunden genutzt werden – etwa für neue Geschäftsmodelle.",
+        "Ihr Schluss: „Alles bleibt anders“ – und was beständig bleibt, ist der Mensch. In der Diskussion ergänzte sie, dass Mitarbeitenden die Einführung eher zu langsam geht, Sicherheitsfragen aber manchmal zum Bremsen zwingen."
       ],
       "transcript": "notes-1216"
     },
@@ -351,7 +355,7 @@
       "time_end": "15:30",
       "title": "Wechsel und Übergang in die zwei Fachforen – Pause und Networking",
       "speakers": [],
-      "abstract": "Die Impulse haben gezeigt, welche organisatorischen und technischen Voraussetzungen notwendig sind. In den Fachforen geht es nun um konkrete Anwendungen, Datenstrukturen, Lösungen und Erfahrungen aus Planung, Ausführung und Betrieb. (Flyer: Pause & Networking – Übergang Fachforen bis 18:10 Uhr.)",
+      "abstract": "Die Impulse haben gezeigt, welche organisatorischen und technischen Voraussetzungen notwendig sind. In den Fachforen geht es nun um konkrete Anwendungen, Datenstrukturen, Lösungen und Erfahrungen aus Planung, Ausführung und Betrieb.",
       "sources": [
         "https://industrietag-rm.de/praxisforum/programm-vortraege/",
         "Flyer",
@@ -390,10 +394,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Bengel (im Transkript „Patricia Bengel“) stellte sich mit dem Schwerpunkt Strategie und Entwicklung bei ATP vor und rahmte den Impuls als Weg von der Information zur Entscheidung.",
-        "Wachsendes Datenvolumen und steigender Zeitdruck in Planung und Bau machen es nötig, Routinearbeit zu reduzieren, damit fachliche Bewertung übrig bleibt.",
-        "Neben BIM und KI nannte sie Automatisierung und strukturierte Daten als Mittel, Veränderungen früher sichtbar und relevante Informationen schneller verfügbar zu machen.",
-        "KI wurde als Verstärker beschrieben, der eine Grundlage aus möglichst sauberen, konsistenten Daten braucht – nicht als Ersatz für die fachliche Entscheidung."
+        "Bengel verantwortet bei ATP Strategie und Entwicklung des TGA-Bereichs. Ausgangspunkt: Fachkräfte verbringen einen großen Teil ihrer Arbeitszeit mit wenig wertschöpfenden Tätigkeiten wie der Suche nach Projektinformationen.",
+        "Automatisierung, strukturierte Daten, BIM und KI sollen Routinearbeit reduzieren, damit mehr Zeit für die fachliche Bewertung bleibt.",
+        "In der Planung nutzt ATP Optimierungswerkzeuge, etwa für die beste Ausblickqualität eines Gebäudes oder die maximale Zahl an Stellplätzen in einer Tiefgarage.",
+        "Ihr Grundsatz: Das System sucht das Optimum, der Mensch legt fest, was optimal bedeutet – und trägt die Verantwortung für die Entscheidung."
       ],
       "transcript": "notes-1427"
     },
@@ -432,11 +436,11 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Im Transkript stellt sich Matthäus Grzondziel (ASR: „Matthias“) für Würth vor; Sven Assmann ist laut Programm Mit-Referent, wurde im Transkript namentlich aber nicht gefunden.",
-        "Zentrale These: Orchestrierung von Beschaffung und Lieferung scheitert selten an der Steuerungslogik, sondern an fehlender, durchgängiger Datenversorgung.",
-        "Bauteile brauchen eine klare räumliche Zuordnung (Projektzonen, nicht nur „ein Raum“) und eine Verknüpfung mit dem Terminplan, damit Ort und Zeit zu einer belastbaren Information werden.",
-        "Daraus kann logistische Taktung folgen: Das System leitet aus dem Baufortschritt ab, wann etwas benötigt und bereitgestellt werden muss.",
-        "Ohne strukturierte Daten gilt „Garbage in, Garbage out“: Unstrukturierte oder falsche Eingaben führen eine KI mit hoher Geschwindigkeit in Fehlentscheidungen."
+        "Matthäus Grzondziel von Würth zeigte, warum KI zwischen Planung und Baustelle „verhungert“: Orchestrierung von Beschaffung und Lieferung scheitert selten an der Logik, sondern an fehlenden, durchgängigen Daten.",
+        "Bauteile brauchen eine eindeutige räumliche Zuordnung zu Projektzonen und eine Verknüpfung mit Terminplan und SAP-Prozessen – erst dann werden Ort und Zeit zu verlässlicher Information.",
+        "Sein Prinzip lautet null Fehlertoleranz in der Datenbasis: 100 % Prozesssicherheit auf der Baustelle setzt 100 % Datenintegrität voraus.",
+        "Steht die Datenbasis, wird Just-in-time-Lieferung nach tatsächlichem Baufortschritt möglich, Betreiber erhalten einen vollständigen As-built-Datensatz statt Aktenordner.",
+        "Der Nutzen zeigt sich bei gebundenem Kapital, beim CO₂-Nachweis und bei der Haftung: Die Datenspur wirkt wie ein Flugschreiber für das Bauwerk."
       ],
       "transcript": "notes-1427"
     },
@@ -467,13 +471,16 @@
         "Reachy notes 14:27 (Zuordnung unsicher)"
       ],
       "has_summary": true,
-      "summary_status": "unsicher",
       "summary_bullets": [
-        "Für dieses Zeitfenster liegt eine Transkriptpassage vor, die nur über die Programmuhrzeit (Reachy-Zeit plus ca. einer Stunde) zugeordnet wurde; Name und Firma sind in diesem Abschnitt nicht eindeutig genannt.",
-        "Eine inhaltlich belastbare, sprecherbezogene Zusammenfassung ist deshalb nicht möglich, ohne zu spekulieren."
+        "In Gesprächen mit über 300 Projektleitern hat das Team kein einziges funktionierendes Aufgabenmanagement gefunden: Aufgaben entstehen in Besprechungen, Mails, Telefonaten und Chats und landen in sechs verschiedenen Systemen.",
+        "Jede Rolle – Bauleitung, Planung, Projektsteuerung – macht ihr System zur „Single Source of Truth“. Erledigt einer eine Aufgabe, bleibt sie anderswo offen, bis ein Mensch Bescheid gibt.",
+        "Ein zentrales Aufgabenmanagement löst das nicht. Der Vorschlag: Jeder bleibt in seinem System, und ein KI-Agent hält die Systeme synchron – bei Plattformen ohne Schnittstelle per „Computer Use“.",
+        "Werden Terminplan und Protokolle mit denselben Begriffen geführt, kann der Agent den Fortschritt je Arbeitspaket messen und ein Projektgedächtnis aufbauen, das Lessons Learned in künftige Projekte trägt.",
+        "Empfehlung: mit den eigenen Aufgaben anfangen, Systeme verbinden statt ersetzen – und Fortschritt nicht an abgehakten Aufgaben messen."
       ],
       "summary_placeholder_extra": "Zuordnung des Transkriptabschnitts unsicher – bitte prüfen.",
-      "transcript": "notes-1427"
+      "transcript": "notes-1427",
+      "company_note": "Im Mitschnitt werden Name und Firma nicht genannt; Zeitpunkt und Thema passen jedoch eindeutig zu diesem Programmpunkt."
     },
     {
       "slug": "f1-jaeger",
@@ -494,7 +501,6 @@
           }
         }
       ],
-      "company_note": "Flyer: EFG Engineering Facility Group Ingenieurgesellschaft mbH",
       "abstract": "Die Industrie fordert immer detailliertere BIM-Modelle, während Planungsbudgets unter Druck stehen. Nicht selten übersteigt der Aufwand für die Modellierung einzelner Anlagenbestandteile den Aufwand ihrer späteren Montage. Gleichzeitig liegen die Planungshonorare häufig unter den Materialaufschlägen beteiligter Gewerke. Die Folge: Ohne neue Werkzeuge wird digitale Planung wirtschaftlich kaum noch darstellbar. Der Vortrag zeigt anhand konkreter Praxisbeispiele aus der Technischen Gebäudeausrüstung, wie Künstliche Intelligenz Planunterlagen und Schemata auswertet, Mengen automatisch ermittelt sowie Bauteil- und Flächendaten direkt in Berechnungen übernimmt.",
       "sources": [
         "programm-vortraege",
@@ -503,10 +509,11 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Der Beitrag sitzt im Zeitfenster von Jägers Programmslot; der Name „Jäger“ kommt im Transkript vor, allerdings nicht als klare Selbstvorstellung – die Zuordnung ist wahrscheinlich, nicht zwingend sicher.",
-        "Kernthema laut Ankündigung und passenden Transkriptpassagen: der Modellierungsaufwand in der TGA-Planung droht den Nutzen zu übersteigen, wenn BIM-Modelle immer detaillierter und Budgets enger werden.",
-        "KI kann Planunterlagen und Schemata auswerten, Mengen ermitteln und Bauteil- bzw. Flächendaten in Berechnungen übernehmen – und so digitale Planung wieder wirtschaftlich machen.",
-        "Die fachliche Verantwortung und Prüfung bleibt bei den Ingenieurinnen und Ingenieuren."
+        "Jäger, Geschäftsführer eines TGA-Ingenieurbüros, rechnete vor: Ein Kugelhahn mit 122 Attributen im BIM-Modell kostet rund 13 € im Einkauf, bringt nach HOAI etwa 7,80 € Honorar – verursacht aber rund 40 € Modellierungsaufwand.",
+        "Alle Mitarbeitenden nutzen Copilot; eine zentrale Expertengruppe entwickelt im Copilot Studio gezielt Agenten – vom „Use-Case-Coach“ über einen Agenten-Architekten bis zum Skill-Baukasten.",
+        "Gut funktionieren Planvergleiche (etwa Brandschutzklappen im Grundriss gegen das Schema), Massenauszüge, Flächenlisten aus schlechten PDFs und Plausibilitätsprüfungen von Ausschreibungen gegen die Pläne.",
+        "Noch nicht zuverlässig: Zeichnungen oder Revit-Konstruktionen selbst erzeugen. Und Büro-Standards weichen auf, wenn Excel-Vorlagen einfach in die KI geladen werden.",
+        "Sein Rat: KI dort einsetzen, wo Aufgaben häufig wiederkehren, die Datenlage gut und das Fehlerrisiko überschaubar ist – und lieber zwei Tage externe KI-Expertise bezahlen als allein zu experimentieren."
       ],
       "transcript": "notes-1427"
     },
@@ -535,11 +542,12 @@
         "Reachy notes 14:27 (Zuordnung unsicher)"
       ],
       "has_summary": true,
-      "summary_status": "unsicher",
       "summary_bullets": [
-        "Für das Zeitfenster 16:50 Uhr liegt eine Transkriptpassage vor, die nur über die Uhrzeit zugeordnet wurde; der Name Duftschmid ist in diesem Abschnitt nicht eindeutig genannt.",
-        "Laut veröffentlichter Vortragsankündigung (nicht als Mitschnitt-Beleg) geht es um fünf Agenten in einem hybrid organisierten Büro und um Berichte, die vorbereitet, aber vom Ingenieur geprüft und freigegeben werden.",
-        "Eine sprecherbezogene Zusammenfassung allein aus dem Transkript dieses Fensters wäre spekulativ und unterbleibt deshalb."
+        "Duftschmid zeigte, wie sein Münchner Planungsbüro mit rund 20 Mitarbeitenden hybrid arbeitet: Fünf KI-Agenten übernehmen klar definierte Aufgaben im Tagesgeschäft.",
+        "Agent „Alex“ verfasst Erläuterungsberichte im Bürostil aus einer gewachsenen Wissensdatenbank; ein weiterer Agent recherchiert Normen und nennt stets seine Quellen; ein dritter prüft Verträge und Vergabeunterlagen.",
+        "Die Assistentin „Donna“ kennt Kalender, Postfach und Protokollvorlagen und bereitet Termine vor; ein „Challenger“ prüft alles, was zum Bauherrn geht, aus Kundensicht. Freigeben tut immer ein Mensch.",
+        "Agenten haben eine Selbstbeschreibung mit Rolle, Zielen und Büro-Standards – und brauchen Führung wie ein Junior. Gewonnene Zeit solle in Qualität fließen, nicht nur in mehr Umsatz.",
+        "Für die Einführung empfahl er ein gemischtes Kernteam – vom Skeptiker bis zur Kollegin kurz vor der Rente –, einen Piloten und dann den Roll-out. Gebraucht habe es keine Informatiker und kein Millionenbudget, sondern KI-Kompetenz in der Breite."
       ],
       "transcript": "notes-1427"
     },
@@ -569,9 +577,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Im Transkript wird die Firma Cosuno als Ausschreibungs- und Vergabeplattform für die Leistungsphasen 6 und 7 genannt; der Personenname ist nicht eindeutig, die Zuordnung zum Programmslot aber wahrscheinlich.",
-        "KI kann aus Plan und Baubeschreibung einen strukturierten, GAEB-exportierbaren LV-Entwurf vorbereiten, stößt aber an fachliche Grenzen, die der Mensch verantworten muss.",
-        "Jeder Nutzen entsteht aus Daten: Entscheidend sei, dass die Plattform keine Blackbox wird und Bieter- sowie Preisdaten bei Planern und Bauherren bleiben – transparent und exportierbar."
+        "Ocklenburg stellte Cosuno vor, eine 2019 gegründete Berliner Plattform für Ausschreibung und Vergabe, die heute knapp 700 Partner bei Anfragen und Angebotseinholung unterstützt.",
+        "KI kann in den Leistungsphasen 6 und 7 aus Plänen und Baubeschreibung einen strukturierten, GAEB-exportierbaren LV-Entwurf erstellen und Angebote auf Nachtragspotenziale und Plausibilität prüfen.",
+        "Sie sprach von drei Blackboxes – die dritte sind die eigenen Daten bei externen Plattformen. Bei Cosuno sei jeder Schritt dokumentiert, und hochgeladene Daten sehe nur das eigene Team.",
+        "Zwei Prüffragen für jede Lösung: Sehe ich, was die KI tut, und kann ich freigeben? Und komme ich mit meinen Bieter- und Preisdaten jederzeit wieder heraus?"
       ],
       "transcript": "notes-1427"
     },
@@ -600,14 +609,15 @@
         "programm-vortraege",
         "Reachy notes 14:27"
       ],
-      "has_summary": true,
+      "has_summary": false,
       "summary_bullets": [
         "Der Vorname „Nomi“ taucht im Transkript kurz vor diesem Zeitfenster auf; die Zuordnung zu Nomi Aghasi / OPTIMUSE ist daher wahrscheinlich.",
         "Thema ist die frühe, belastbare Bewertung von Energie- und TGA-Varianten, bevor Änderungen teuer werden – per Simulation auf Basis von Gebäudedaten (BIM/IFC).",
         "Als Praxismaßstab nannte die Ankündigung (und dazu passende Transkriptstellen zur Beschleunigung) eine Energieklasse in Wochen statt Monaten, etwa an einem großen Neubau.",
         "Nutzen entstehe für Bauherren (Variantenvergleich), Planer (weniger manuelle Variantenrechnungen) und Betreiber (Betriebskosten, ESG-Basis)."
       ],
-      "transcript": "notes-1427"
+      "transcript": "notes-1427",
+      "company_note": "Dieser Vortrag ist im Mitschnitt nicht enthalten. Zu Beginn des folgenden Beitrags wurde ein kurzfristiger Ausfall erwähnt; Dr. Petraus nutzte die frei gewordene Zeit für einen längeren Vortrag."
     },
     {
       "slug": "f1-petraus",
@@ -635,10 +645,11 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Im Transkript wird die TMM Group in diesem Zeitfenster genannt; die Zuordnung zu Bernd Petraus ist wahrscheinlich.",
-        "Frühe Planungsentscheidungen haben den größten Hebel, aber die schlechteste Datenlage; klassische Werkzeuge setzen oft Vollständigkeit voraus, die es noch nicht gibt.",
-        "KI kommt mit wenigen, unstrukturierten Daten zurecht, wirft aber Fragen nach Präzision, Reproduzierbarkeit und Nachvollziehbarkeit auf.",
-        "Anwendungen von der Bestandsaufnahme bis zur Variantenbildung wurden danach sortiert, wie schnell ein Fehler sichtbar wird – mit der Energiesystemplanung eines Industriestandorts als Belastungsprobe."
+        "Petraus erklärte zunächst, was Sprachmodelle können und was nicht: Sie sind Blackboxes, lernen nicht aus der einzelnen Unterhaltung und arbeiten nur mit dem, was in ihr Kontextfenster passt – deshalb muss der Mensch weiter mitprüfen.",
+        "Ein BIM-Modell oder Code per KI zu erzeugen, geht schnell; es später gezielt zu verändern, ist dagegen mühsam. Geometrie ist keine Sprache, und vollständige Modelle sprengen schnell jedes Kontextfenster.",
+        "In der frühen Planung sei KI besonders wertvoll, weil sie mit unvollständigen, widersprüchlichen Daten umgehen kann – man sollte lange abstrakt bleiben und erst nach den wesentlichen Entscheidungen detailliert modellieren.",
+        "Statt einer großen KI-Anwendung erwartet er viele kleine Werkzeuge nach dem Prinzip „ein Tool, eine Aufgabe“; die Leistungsphasen werden sich verschieben, hin zu mehr funktionaler Ausschreibung.",
+        "Als Praxisbeispiel zeigte er ein digitales Energiekonzept für einen Industriestandort – von Lastprofilen über Flächennutzung bis zum Variantenvergleich, bei dem Netzanschluss und Speicher am Ende die zentralen Fragen sind."
       ],
       "transcript": "notes-1427"
     },
@@ -670,10 +681,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Nach kurzer Anmoderation („Firma Hildi“) stellt sich „Axel Mbruch“ als technischer Leiter für Engineering und Robotik vor – Zuordnung zu Axel Mühlenbruch, Hilti, ist wahrscheinlich.",
-        "Der Vortrag sollte den Weg vom digitalen Modell (TGA-Modell auf der Folie) zur automatisierten Baustelle zeigen, konkret zum Bohrroboter, der nicht „von allein“ bohrt, sondern Position und Bohrpunkte braucht.",
-        "Ein typisches BIM-/TGA-Modell allein reicht zum Bohren nicht: Die Informationen sind zu rudimentär; es braucht eine durchgängige Kette von der Planung bis zur Maschine auf der Baustelle.",
-        "Mühlenbruch betonte, hier stecke oft noch weniger KI als in den vorangegangenen Impulsen, dafür konkrete Automatisierung, die sich in der Praxis nutzen lässt."
+        "Mühlenbruch, bei Hilti technischer Leiter für Engineering und Robotik, zeigte den Weg vom digitalen Modell zur automatisierten Baustelle am Beispiel des Deckenbohrroboters Jaibot.",
+        "Der Roboter bohrt nicht „von allein“: Er braucht exakte Positionen und Bohrpunkte. Ein typisches TGA-Modell ist dafür zu grob – nötig ist eine durchgängige Datenkette von der Befestigungsplanung bis zur Maschine.",
+        "Auf der Baustelle liefert das System Transparenz, etwa wie viele Löcher in den letzten Minuten gebohrt wurden und welche wegen Kollisionen nicht gesetzt werden konnten.",
+        "Hier stecke oft weniger KI als in den Impulsen, dafür konkrete Automatisierung, die Produktivität steigert und dem Fachkräftemangel begegnet."
       ],
       "transcript": "saal-2"
     },
@@ -704,9 +715,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Der Beitrag wird im Transkript als Vortrag von „Zell Abig“ / „Zel Abig“ angekündigt, ausdrücklich als Ventilatorhersteller für die Haustechnik – die Zuordnung zu ZIEHL-ABEGG ist wahrscheinlich, der Personenname André Müller kommt nicht vor.",
-        "Thema ist, Zustände am Ventilator zu erkennen und Ausfälle zu vermeiden (vorausschauende Wartung, typischerweise über Vibrations- und Lagersignale).",
-        "Weil der Sprechername fehlt, bleiben die Aussagen bewusst auf Firma und Thema begrenzt."
+        "Ziehl-Abegg setzt rund eine Milliarde Euro im Jahr um, etwa 90 % davon mit Ventilatoren für Lüftungs- und Klimaanlagen, Wärmepumpen und Wohnraumlüftung.",
+        "Moderne EC-Ventilatoren haben einen Schwingungssensor direkt auf der Platine. Damit lassen sich Lagerzustand und Unwucht laufend überwachen, statt Techniker zu Hunderten Geräten zu schicken.",
+        "Weil Temperatur, Einbausituation und Alter die Schwingwerte beeinflussen, nutzt Ziehl-Abegg ein neuronales Netz auf eigenen Servern, um Normalbetrieb von beginnenden Schäden zu unterscheiden.",
+        "So wird aus starren Wartungsintervallen eine vorausschauende Wartung: Ein Lager wird weder zu früh getauscht noch fällt es unerwartet nach einem Bruchteil der erwarteten Laufzeit aus."
       ],
       "transcript": "saal-2"
     },
@@ -746,12 +758,13 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Eine Person stellt sich als von der Firma Belimo vor („Wir machen die orangenen Antriebe“); welcher der beiden Programmnamen (Philipp Becker, Alexander Saumer) spricht, ist durch die Spracherkennung unklar.",
-        "Laut Ankündigung und dazu passenden Transkriptstellen stehen hochwertige Raum- und Energiedaten am Anfang guter Betriebsentscheidungen (Temperatur, CO₂, Feuchte).",
-        "Produktsseitig wurde das Energy Valve bzw. die Messung der tatsächlich bereitgestellten Leistung und die Nutzung zertifizierter Energiedaten als Grundlage für Analysen und mögliche Abrechnung thematisiert.",
-        "Zusammengeführte Raum-, Anlagen- und Energiedaten sollen Transparenz, Effizienz und eine Basis für spätere KI-Analysen schaffen."
+        "Alexander Saumer von Belimo („wir machen die orangenen Antriebe“) zeigte am Beispiel eines Besprechungsraums, wie gute Daten zu besseren Entscheidungen im Gebäudebetrieb führen.",
+        "Präzise Raumsensoren für Temperatur, CO₂ und Feuchte müssen auch unter realen Einbaubedingungen stimmen – ein CO₂-Sensor etwa gibt selbst Wärme ab, was die Messung verfälschen kann.",
+        "Das Belimo Energy Valve misst die tatsächlich bereitgestellte Leistung und optimiert den Betrieb über den ΔT-Manager; in MID-zertifizierter Ausführung eignen sich die Werte sogar zur Abrechnung.",
+        "Zusammengeführte Raum- und Energiedaten machen sichtbar, was Lager, Produktionshalle oder einzelne Gebäudeflügel verbrauchen – die Grundlage für spätere KI-Analysen."
       ],
-      "transcript": "saal-2"
+      "transcript": "saal-2",
+      "company_note": "Im Mitschnitt präsentiert Alexander Saumer."
     },
     {
       "slug": "f2-voelkerling",
@@ -780,9 +793,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Völkerling stellt sich namentlich vor und verortet sich im AI-Team der IT bei TROX (seit etwa fünf Jahren) – die Zuordnung ist sicher.",
-        "Der Impuls lieferte Praxiserfahrungen zum KI-Einsatz in der Lüftungstechnik, nicht nur als Zukunftsversprechen.",
-        "Im Transkript und in der Vorab-Beschreibung erscheinen Anwendungen in Produktion (Anomalieerkennung), Vertrieb (etwa automatische Auftragserfassung) und interne Assistenten sowie maschinelles Lernen zur Fehlererkennung an RLT-Geräten."
+        "Völkerling arbeitet seit rund fünf Jahren im KI-Team der IT bei TROX und berichtete, wie der Lüftungshersteller KI heute schon einsetzt – in Prozessen wie in Produkten.",
+        "Intern nutzt TROX einen eigenen Chatbot auf Open-Source-Basis, der Website und Intranet kennt, sowie eine KI-gestützte Auftragserfassung, die Aufträge aus E-Mails und Anhängen ausliest.",
+        "Feedback und Qualitätsüberwachung sind dabei Pflicht – sonst merkt niemand, wenn ein Chatbot Unsinn erzählt.",
+        "In Forschung und Produktion wird maschinelles Lernen erprobt, um Anomalien und Fehler in RLT-Geräten aus Schwingungs- und Betriebsdaten früh zu erkennen."
       ],
       "transcript": "saal-2"
     },
@@ -805,7 +819,6 @@
           }
         }
       ],
-      "company_note": "Eventseite: Bosch Energy and Building Solutions GmbH. Flyer: Buderus. Teilnehmerdossier: Bosch Energy and Building Solutions / Buderus.",
       "abstract": "Die Dekarbonisierung von Bestandsgebäuden stellt Eigentümer vor die Herausforderung, Klimaschutzziele, Wirtschaftlichkeit und Versorgungssicherheit gleichzeitig zu erfüllen. Am Beispiel der modularen Sanierung eines Pflegeheims wird aufgezeigt, wie eine schrittweise Transformation im laufenden Betrieb gelingt. Gleichzeitig wird aufgezeigt, wie bereits heute die Voraussetzungen für einen zukünftig energieflexiblen Betrieb geschaffen werden können, um auf dynamische Energiemärkte, Netzanforderungen und neue Geschäftsmodelle vorbereitet zu sein.",
       "sources": [
         "Flyer",
@@ -813,13 +826,14 @@
         "Saal-2-Transkript"
       ],
       "has_summary": true,
-      "summary_status": "teilweise unsicher",
       "summary_bullets": [
-        "Thematisch passt der Abschnitt klar zum Programmtitel „Energieflexibilität durch modulare Sanierung“; die sprechende Person stellt sich im Transkript als „Christian“ von der „Firma Bosch“ vor – nicht als Johannes Rauh. Die Personenidentität ist daher unklar und sollte geprüft werden.",
-        "Der Beitrag schildert den Druck der Elektrifizierung (Wärmepumpen, Prozesswärme, flexible Tarife, Speicher, Hausanschluss) auf Bestandsgebäude wie Betriebe und Pflege- bzw. Gesundheitseinrichtungen.",
-        "Modular sanieren soll Energieeffizienz, Versorgungssicherheit und Flexibilität verbinden, ohne die Komplexität der Energiewende zu unterschätzen."
+        "Elektrifizierung verändert Bestandsgebäude: Wärmepumpen, elektrische Prozesswärme, Speicher, flexible Tarife und der Hausanschluss müssen zusammen gedacht werden.",
+        "Bosch setzt auf einen schrittweisen Weg: zuerst Potenzialanalyse und Konzept (förderfähig mit bis zu 60 %), dann Umsetzung in Etappen bis in den Anlagenbetrieb.",
+        "Im Praxisbeispiel einer Pflegeeinrichtung mit zwei Gaskesseln decken Luft-Wasser-Wärmepumpen im ersten Schritt rund 65 % des Wärmebedarfs; Gas bleibt nur für Spitzenlasten. Ziel ist die vollständige Versorgung mit erneuerbarer Energie.",
+        "Ein zentrales Energiemonitoring für Gas und Strom und die Regelung über Logamatic 5000 schaffen die Datenbasis, um etwa bei günstigen Strompreisen gezielt die Wärmepumpe zu nutzen."
       ],
-      "transcript": "saal-2"
+      "transcript": "saal-2",
+      "company_note": "Gehalten wurde der Vortrag krankheitsbedingt von einem Bosch-Kollegen, Projektleiter für Energieeffizienz, in Vertretung für Johannes Rauh."
     },
     {
       "slug": "f2-helbig",
@@ -847,10 +861,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Im Transkript erscheinen „Monondas“, das Gespräch mit Geschäftsführer Thomas Brugger und der Fall eines Fertigers von Magnetsystemen; der Name Miriam Helbig fehlt. Es wird erwähnt, man trete „zu dritt“ auf. Die Slot-Zuordnung ist wahrscheinlich, die genaue Sprecherrolle unklar.",
-        "Ausgangspunkt beim Kunden war Transparenz über Maschinenverbräuche, nicht zuerst „KI um der KI willen“.",
-        "Energiedaten aus Produktion, Gebäudetechnik und Photovoltaik werden auf einer Datenplattform zusammengeführt; als belegtes Beispiel gilt die LED-Umrüstung mit deutlicher Senkung des Stromverbrauchs (in der Ankündigung: rund 50 %).",
-        "Ziel ist, aus Messdaten Entscheidungen abzuleiten und Energiekosten perspektivisch Maschinen und Produkten zuzuordnen."
+        "Helbig stellte Mondas vor, eine Datenplattform für Energiesysteme aus Freiburg, 2018 aus dem Fraunhofer ISE ausgegründet und heute rund 30 Personen stark.",
+        "Bei Brugger Magnetsysteme laufen Energiedaten aus Produktion, Gebäudetechnik und Photovoltaik zentral zusammen. Ausgangspunkt war der Wunsch nach Transparenz über Maschinenverbräuche – KI kommt später.",
+        "Die Messdaten belegen, was Maßnahmen bringen: Die LED-Umrüstung senkte den Stromverbrauch der Beleuchtung um rund 50 %.",
+        "Eine „Lastspitzenampel“ warnt, wenn der Bezug die selbst gesetzte Grenze von 160 kW überschreitet (der Trafo ist für 250 kW zugelassen, gemessen wurden bereits 207 kW) – die Basis für Batteriespeicher und Maschinensteuerung."
       ],
       "transcript": "saal-2"
     },
@@ -881,10 +895,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Ferstl stellt sich namentlich als Vertriebsleiter Süd vor; die Firma klingt im Transkript wie „S Birges Co“ (Saia Burgess Controls / SBC) – die Zuordnung ist sicher.",
-        "Thema ist sichere und redundante Automation (im Transkript „Korrugsteuerung“) mit Cybersecurity nach IEC 62443, Security Level 3.",
-        "Hohe Verfügbarkeit und Security sollen zusammen gedacht werden, nicht als nachträglicher Zusatz; der Praxisfall zielt auf eine Hightech-Produktionsumgebung.",
-        "Die Steuerung soll sich in die Gebäudeautomation integrieren lassen; Cybersecurity beginnt bereits in der Planung, nicht erst im Betrieb."
+        "Ferstl, Vertriebsleiter Süd bei SBC (Saia Burgess Controls), machte mit Praxisbeispielen klar, warum Cybersecurity in der Gebäudeautomation Pflicht ist – etwa gehackte Kühltheken, die plötzlich heizten statt kühlten.",
+        "Je offener und vernetzter Anlagen sind, desto größer die Angriffsfläche. Gefragt sei ein Controller, der Angriffe abwehrt, ausfallsicher ist und jederzeit konsistent arbeitet.",
+        "Im Praxisfall einer neuen Hightech-Produktionsanlage in Berlin kommt der Saia PCD QronoX Controller mit Security Level 3 nach IEC 62443 und redundanter Steuerungsarchitektur zum Einsatz, angebunden über BACnet.",
+        "Sein Fazit: Cybersecurity muss schon in der Planung eines Neubaus bis auf die Steuerungsebene mitgedacht werden."
       ],
       "transcript": "saal-2"
     },
@@ -914,10 +928,10 @@
       ],
       "has_summary": true,
       "summary_bullets": [
-        "Der Sprecher stellt sich als „Simon V“ von der Siemens AG vor – die Zuordnung zu Simon Pfau ist wahrscheinlich.",
-        "Viele sogenannte smarte Gebäude bleiben ein Flickenteppich aus Einzellösungen und Dashboards; der nächste Schritt sei, Daten übergreifend zu verknüpfen.",
-        "Vision (teilweise schon Realität) ist das menschenzentrierte, autonome Gebäude: KI hilft, Abweichungen früh zu erkennen und Maßnahmen vorzuschlagen, der Mensch setzt Leitplanken und bleibt verantwortlich.",
-        "Als Voraussetzungen nannte er Konnektivität, eine Datenstrategie schon in der Planung („Smart Ready“) und klare Anwendungsfälle im Betrieb; in Durchschnittsbetrachtungen sprach er von spürbaren Energiekostensenkungen, wenn flexible Erzeuger und Verbraucher zusammenspielen."
+        "Pfau zeigte die Siemens-Vision vom menschenzentrierten, autonomen Gebäude – die teilweise schon Realität ist. Viele „smarte“ Gebäude sind heute noch ein Flickenteppich aus Einzellösungen.",
+        "Erzeuger, Speicher und Verbraucher werden 24 Stunden im Voraus geplant und dann live nachgeregelt; im Schnitt sinken die Gesamtenergiekosten so um rund 15 %, der Eigenverbrauch steigt deutlich.",
+        "Ein „Energy Twin“ simuliert Szenarien in unter 30 Minuten statt wie früher in ein bis zwei Wochen; im Engineering ließen sich rund 25 % Aufwand einsparen.",
+        "KI erkennt Abweichungen früh und priorisiert Maßnahmen, Menschen setzen Leitplanken und entscheiden. Voraussetzung sind vernetzte Systeme und eine Datenstrategie schon in der Planung."
       ],
       "transcript": "saal-2"
     },
@@ -970,5 +984,15 @@
     "Führung und Kultur entscheiden mit: Experimentierräume, Kompetenzaufbau und die Frage, wofür eingesparte Zeit genutzt wird.",
     "Für Teilnehmende wurde in Aussicht gestellt, Transkripte und eine Fragemöglichkeit in den Tagen nach dem Event bereitzustellen."
   ],
-  "related_event_note": "Auf derselben Domain gibt es ein separates Programm des 2. Industrietag Rems-Murr (24.09.2026, Bürgerzentrum Waiblingen) mit Bauernhansl, Bartsch, Wieland und Podium. Dort sind bereits Präsentationen verlinkt. Das ist nicht das Praxisforum vom 10.11.2026."
+  "related_event_note": "Auf derselben Domain gibt es ein separates Programm des 2. Industrietag Rems-Murr (24.09.2026, Bürgerzentrum Waiblingen) mit Bauernhansl, Bartsch, Wieland und Podium. Dort sind bereits Präsentationen verlinkt. Das ist nicht das Praxisforum vom 10.11.2026.",
+  "takeaway_heads": [
+    "Prozesse vor Werkzeugen",
+    "Agenten bereiten vor, Menschen entscheiden",
+    "Ohne gute Daten keine KI",
+    "In der frühen Planung liegt der größte Hebel",
+    "Erst messen und automatisieren",
+    "Sicherheit gehört in die Planung",
+    "Führung und Kultur entscheiden mit",
+    "Das Gespräch geht weiter"
+  ]
 }

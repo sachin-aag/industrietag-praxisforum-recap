@@ -1,0 +1,131 @@
+/* A4 recap document. Rendered by scripts/build-pdf.mjs through Chromium. */
+
+@page {
+  size: A4;
+  margin: 18mm 18mm 20mm;
+  @bottom-left {
+    content: "Praxisforum 2026";
+    font: 500 8pt "Instrument Sans", sans-serif;
+    color: #66708c;
+  }
+  @bottom-right {
+    content: counter(page);
+    font: 600 8pt "Instrument Sans", sans-serif;
+    color: #2a4b9b;
+  }
+}
+@page cover {
+  margin: 0;
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+html, body { background: #fff; }
+body { font-size: 10pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pdf { color: #16213f; font-family: var(--body); }
+.pdf h1, .pdf h2, .pdf h3 { font-family: var(--display); color: #16213f; margin: 0; }
+.pdf h2 { font-size: 24pt; line-height: 1.05; margin-bottom: 4mm; }
+.pdf h3 { font-size: 12.5pt; line-height: 1.2; font-weight: 600; }
+.pdf p { margin: 0 0 2.5mm; }
+
+/* ---------- cover ---------- */
+.p-cover {
+  page: cover;
+  width: 210mm; height: 297mm;
+  display: flex; flex-direction: column;
+  background: linear-gradient(180deg, #2a4b9b 0%, #23438f 60%, #1c3576 100%);
+  color: #fff; overflow: hidden; break-after: page;
+}
+.p-cover-top { background: #fff; display: flex; align-items: center; gap: 6mm; padding: 10mm 18mm; }
+.p-cover-top img { height: 12mm; width: auto; }
+.p-cover-top span { font-family: var(--display); font-weight: 600; font-size: 13pt; color: #2a4b9b; padding-left: 6mm; border-left: 0.3mm solid #d8deea; }
+.p-cover-body { padding: 22mm 18mm 0; flex: 1; }
+.p-cover-photo { margin: 10mm 0 0; }
+.p-cover-photo img { width: 100%; height: 72mm; object-fit: cover; border-radius: 2mm; }
+.p-cover-line { font-family: var(--display); font-weight: 600; font-size: 16pt; color: #ffc926; margin-bottom: 6mm !important; }
+.p-cover h1 { color: #fff; font-size: 46pt; line-height: 1; max-width: 150mm; }
+.p-cover-date { margin-top: 8mm !important; font-size: 13pt; line-height: 1.45; color: #dfe6fa; }
+.p-cover .horizon { height: 44mm; margin: 0; animation: none; }
+.p-cover-foot { background: #121f4a; display: flex; align-items: center; gap: 12mm; padding: 4mm 18mm 14mm; margin-top: -1px; }
+.p-cover-foot img { height: 9mm; width: auto; }
+.p-gc { display: inline-flex; align-items: center; gap: 2.5mm; font-family: var(--display); font-weight: 700; font-size: 12pt; letter-spacing: 0.08em; color: #fff; }
+
+/* ---------- inner pages ---------- */
+.p-page { break-before: page; }
+.p-lede { font-size: 12pt; line-height: 1.5; color: #47526f; max-width: 150mm; margin-bottom: 6mm !important; }
+.p-facts { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 4mm; margin: 0 0 7mm; padding: 4mm 0; border-block: 0.3mm solid #d8deea; }
+.p-facts dt { font-size: 8pt; color: #66708c; }
+.p-facts dd { margin: 0; font-weight: 600; font-size: 9.5pt; }
+
+.p-tt { width: 100%; border-collapse: collapse; font-size: 8.5pt; line-height: 1.3; }
+.p-tt tr { break-inside: avoid; }
+.p-tt th { width: 13mm; text-align: left; vertical-align: top; font-family: var(--display); font-weight: 600; font-size: 9.5pt; color: #2a4b9b; padding: 2.2mm 2mm 2.2mm 0; border-top: 0.3mm solid #d8deea; }
+.p-tt td { vertical-align: top; padding: 2.2mm 3mm; border-top: 0.3mm solid #d8deea; }
+.p-tt td strong { display: block; font-family: var(--display); font-weight: 600; font-size: 9.5pt; color: #16213f; }
+.p-tt td span { display: block; color: #66708c; margin-top: 0.6mm; }
+.p-tt td em { display: block; font-style: normal; font-weight: 700; font-size: 7pt; margin-bottom: 0.5mm; }
+.p-tt td.f1 { border-left: 0.8mm solid #1a8fe0; width: 43%; }
+.p-tt td.f2 { border-left: 0.8mm solid #d42c78; width: 43%; }
+.p-tt td.f1 em { color: #1a8fe0; }
+.p-tt td.f2 em { color: #d42c78; }
+.p-tt tr.is-break td strong { font-family: var(--body); font-weight: 400; font-style: italic; color: #66708c; }
+
+/* ---------- takeaways ---------- */
+.p-takeaways ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: 9mm; }
+.p-takeaways li { padding: 4mm 0 5mm; border-top: 0.3mm solid #d8deea; break-inside: avoid; }
+.p-takeaways h3 { color: #2a4b9b; font-size: 13pt; margin-bottom: 1.5mm; }
+.p-takeaways p { color: #47526f; font-size: 9.5pt; margin: 0; }
+
+/* ---------- talks ---------- */
+.p-track-head { padding-bottom: 4mm; margin-bottom: 2mm; border-bottom: 1mm solid #2a4b9b; }
+.p-forum-1 .p-track-head { border-color: #1a8fe0; }
+.p-forum-2 .p-track-head { border-color: #d42c78; }
+.p-forum-1 .p-track-head h2 { color: #1a8fe0; }
+.p-forum-2 .p-track-head h2 { color: #d42c78; }
+.p-track-head h2 { margin: 0 !important; }
+.p-track-head p { margin: 1mm 0 0; font-size: 11pt; color: #47526f; }
+.p-talk { display: grid; grid-template-columns: 24mm 1fr; gap: 4mm; padding: 5mm 0; border-bottom: 0.3mm solid #d8deea; break-inside: avoid; }
+.p-talk-time { font-family: var(--display); font-weight: 600; font-size: 10pt; color: #2a4b9b; }
+.p-talk h3 { margin-bottom: 1.2mm; }
+.p-talk-who { color: #47526f; font-size: 9pt; margin-bottom: 2.5mm !important; }
+.p-talk-who strong { color: #16213f; font-weight: 600; }
+.p-points { margin: 0; padding: 0; list-style: none; display: grid; gap: 1.6mm; }
+.p-points li { position: relative; padding-left: 4.5mm; font-size: 9.5pt; line-height: 1.45; }
+.p-points li::before { content: ""; position: absolute; left: 0.5mm; top: 1.9mm; width: 1.6mm; height: 1.6mm; border-radius: 50%; background: #2a4b9b; }
+.p-note { background: #fff8e0; border-left: 0.9mm solid #ffc926; padding: 2mm 3mm; font-size: 8.5pt; color: #4d4020; }
+.p-abstract { font-size: 9pt; color: #47526f; }
+
+/* ---------- photos ---------- */
+.p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.p-grid figure { margin: 0; break-inside: avoid; }
+.p-grid img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 1mm; }
+.p-grid figcaption { font-size: 7.5pt; color: #66708c; padding-top: 1.2mm; line-height: 1.35; }
+.p-colophon { margin-top: 8mm; padding-top: 5mm; border-top: 0.3mm solid #d8deea; font-size: 8.5pt; color: #47526f; break-inside: avoid; }
+.p-colophon h3 { font-size: 11pt; margin-bottom: 1.5mm; }
+
+/* ---------- numbers & charts ---------- */
+.p-numbers .bars li { grid-template-columns: 52mm 1fr 18mm; font-size: 9.5pt; gap: 3mm; }
+.p-numbers .bars ul { gap: 3mm; }
+.p-sub { margin-top: 12mm !important; }
+.pdf .figures { grid-template-columns: 1fr 1fr; gap: 4mm; }
+.pdf .figures a { padding: 4mm 5mm; background: #f4f6fa; }
+.pdf .figures strong { font-size: 22pt; }
+.pdf .figures span { font-size: 9pt; }
+.pdf .figures em { font-size: 8pt; }
+.pdf .bars figcaption, .pdf .peak figcaption { font-size: 8pt; margin-top: 3mm; }
+.p-chart { margin: 4mm 0 0; padding: 4mm; border: 0.3mm solid #d8deea; border-radius: 1mm; break-inside: avoid; }
+.p-chart .bars li { grid-template-columns: 45mm 1fr 16mm; font-size: 8.5pt; gap: 3mm; }
+.p-chart .bars ul { gap: 2mm; }
+.p-chart .peak-legend dd { font-size: 11pt; }
+.p-chart .peak-legend dt, .p-chart .peak-legend dd span { font-size: 7.5pt; }
+.p-note-quiet { background: #f4f6fa; border-left-color: #2a4b9b; color: #47526f; }
+.p-talk-photo { margin: 4mm 0 0; break-inside: avoid; }
+.p-talk-photo img { width: 100%; height: 55mm; object-fit: cover; border-radius: 1mm; }
+.p-talk-photo figcaption { font-size: 7.5pt; color: #66708c; padding-top: 1mm; }
+
+/* Screen preview of the print route */
+@media screen {
+  body { background: #e6e9f0; }
+  .pdf { width: 210mm; margin: 24px auto; }
+  .p-page { background: #fff; padding: 18mm; margin-top: 24px; }
+}

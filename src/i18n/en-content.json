@@ -5,7 +5,7 @@
     "programme": "13:00–18:30",
     "networking": "18:30–22:00"
   },
-  "transcription_uncertainty": "The summaries are based on live transcriptions (Reachy Mini). Automatic speech recognition is uncertain in places (names and technical terms are often distorted). Reachy timestamps typically run about one hour earlier than the official programme times (presumably UTC rather than CET). No verbatim quotations are presented as confirmed.",
+  "transcription_uncertainty": "The summaries are based on live recordings that the Reachy Mini robot transcribed automatically during the talks. Because speech recognition is not always reliable with names and technical terms, the content was checked against the public programme. Where the match to a talk is uncertain, this is marked. No verbatim quotes are given.",
   "takeaways": [
     "AI has an effect in planning, construction and operations primarily when processes, data and organisation are changed along with it – not when new tools are simply dropped into old workflows.",
     "Agents can prepare routine work (reports, bills of quantities drafts, notes, appointments); approval, assessment and responsibility remain with the specialists.",
@@ -27,105 +27,130 @@
     "08-huber-vortrag.webp": "Hanna Huber on stage",
     "09-huber-prozesse.webp": "Hanna Huber presenting slides on processes and collaboration",
     "10-huber-gebaeude.webp": "Hanna Huber in front of a 3D building visualisation",
-    "11-alles-wird-anders.webp": "Slide “Alles wird anders” during Hanna Huber’s keynote"
+    "11-alles-wird-anders.webp": "Slide “Alles bleibt anders” (everything stays different) during Hanna Huber’s keynote"
   },
   "talks": {
     "eroeffnung": {
-      "abstract": "The mayor of Kernen, Benedikt Paulowitsch, welcomes the guests together with host Heino Wolkenhauer, Geschäftsführer of Wilhelm Schetter GmbH Haustechnik. (Flyer: welcomes the guests with Heino Wolkenhauer and Michael Aechtler.)",
+      "abstract": "The mayor of Kernen, Benedikt Paulowitsch, welcomes the guests together with host Heino Wolkenhauer, Geschäftsführer of Wilhelm Schetter GmbH Haustechnik.",
       "summary_bullets": [
-        "Heino Wolkenhauer opened the Praxisforum and reported that the host company has been using AI for about a year – with efficiency gains and a shift from initial scepticism to enthusiasm.",
-        "The aim of the day was to share experience and concrete applications, to put questions to the speakers, and to exchange views at the stands.",
-        "According to the welcome, more than 400 participants from planning, industry, construction, academia and the media were present.",
-        "Mayor Benedikt Paulowitsch praised the organisers’ courage, called AI an opportunity for Germany, and presented Kernen as a pioneer municipality in public administration.",
-        "What matters for the use of AI is a change in organisation, culture and attitude – not merely the purchase of tools."
-      ]
+        "Host Heino Wolkenhauer said Schetter has been working intensively with AI for exactly one year: getting started was hard, but today AI delivers noticeable efficiency gains – initial worry turned into enthusiasm.",
+        "Rather than keep these experiences in-house, the company wanted to share them: the day's partners are companies Schetter has worked with along the way.",
+        "Around 400 guests from more than 270 companies had registered – including about 140 from planning, 70 each from industry and from construction and trades, and 40 architects.",
+        "Mayor Benedikt Paulowitsch praised the entrepreneurial courage and presented Kernen as a nationwide AI pioneer among municipalities: AI agents, AI-generated council minutes and process automation (RPA) are everyday practice at the town hall.",
+        "His key message: first get organisation, culture and mindset ready, then AI delivers its value – simply buying tools is not enough."
+      ],
+      "title": "Opening & welcome"
     },
     "impuls-1-liebl": {
       "abstract": "AI is moving from a tool to a co-worker: agents take on tasks and responsibility – often faster than organisations can adapt. Introducing tools alone does little: employees work up to 70% faster, yet lead time barely falls because the work waits at old interfaces. Only an end-to-end redesign of processes makes silos disappear. Using practical examples, the talk sets out six maturity stages through to a self-optimising organisation – and what that means for leadership.",
       "summary_bullets": [
-        "Liebl placed the development in context: from specialised machine-learning applications, through generative AI (summarising, researching, producing text and images), to agents that can operate tools, plan, and hand sub-tasks to sub-agents.",
-        "Tools alone often change throughput very little: in a simulation example shown in the talk, lead time fell noticeably only when processes were recut – not merely when individual steps became faster.",
-        "In the operating model sketched, people remain the instance that assesses, queries and approves results, while AI takes over large parts of the execution.",
-        "As the next generation of value creation he described the interplay of manager agents (short- and long-term memory, planning, tools) with freely configurable agent structures – and a corresponding transformation and leadership effort.",
-        "Questions of safety and control (agent setups that cannot be fully controlled, research examples of communication between systems) were raised as an open leadership task."
-      ]
+        "Liebl, who co-founded appliedAI almost ten years ago, traced the path from specialised machine learning through generative AI to agents that use tools, plan and delegate subtasks to other agents.",
+        "Tools alone change little: only when processes are redesigned end to end does lead time really fall – the more broadly workflows are questioned, the bigger the effect.",
+        "As a live example he showed a multi-agent system for tenders: agents analyse the request, communicate with suppliers and compare offers; a human tender manager gives the final approval.",
+        "At the next maturity level, agents increasingly take over coordination and bring in experts where needed; company knowledge becomes “organisational intelligence”.",
+        "Leadership has to make room for mistakes and shared learning – and treat AI as a chance to rethink, as is already happening in the US and China."
+      ],
+      "title": "State of AI – how will agentic AI change the way we work?",
+      "label": "Keynote 1"
     },
     "impuls-2-aechtler": {
       "abstract": "Everyone talks about AI, yet little has changed so far in the everyday work of planning offices, construction sites and building operations. Michael Aechtler shows live how an AI agent really works alongside people today: it listens in meetings, sorts notes, drafts proposals and prepares appointments. Using his own company, which is to a large extent run with AI agents, it becomes clear which data and preconditions are needed, where time and cost are saved, and where the limits lie. There are also concrete first steps with which companies can move from trying things out to taking action and take their employees with them.",
       "summary_bullets": [
-        "Aechtler picked up the finding that there is much talk about AI, yet everyday work in planning, construction and operations often still changes little – and demonstrated live how an agent works on concrete office tasks.",
-        "The live demo included, among other things, an agent interface (documented in event photos as “HALLO MICHAEL”); the talk showed typical activities such as listening in meetings, sorting notes, and preparing proposals and appointments.",
-        "The example was his own company, which according to the speaker is to a large extent run with AI agents; the necessary data and preconditions were as visible as the limits of automation.",
-        "The keynote aimed at concrete first steps: moving from trying things out to taking action and taking employees along, rather than stopping at tool demos."
-      ]
+        "Aechtler says that with Gamechangerz he supports 50 to 70 companies in introducing AI – and finds that it is usually people, not systems, who need help taking the first step.",
+        "He dismantled three myths: AI takes over tasks, not jobs; hallucinations mostly come from badly built systems; and “we're not allowed to” (for example because of data protection) should no longer be an excuse – solutions exist.",
+        "Live on stage he showed VELA, the system behind Gamechangerz as a “zero-person company”: every company goal gets its own agent with access to a locally hosted company memory and a toolbox.",
+        "Good results come from training: let it produce, give feedback, repeat. His writing style was learned from ten years of LinkedIn posts and twelve years of emails; he still approves every outgoing email himself.",
+        "A first campaign of just 50 targeted emails led to 26 meetings – so many that he now deliberately moves more slowly and with more focus.",
+        "His advice: start with one concrete case, project or department instead of debating for months – and think bigger."
+      ],
+      "title": "From AI hype to everyday work: how people and companies start taking action",
+      "label": "Keynote 2"
     },
     "impuls-3-huber": {
       "abstract": "Company performance does not come from AI alone, but from its successful integration into a company’s value creation. The winners in the AI era will not be the companies with the most tools, but the companies that connect technology, data, people and processes into a high-performing value-creation system.",
       "summary_bullets": [
-        "Huber introduced herself as responsible for Digital Strategy & Culture at Drees & Sommer and framed the keynote around the question of how data actually becomes higher company performance.",
-        "Performance does not come from the greatest number of AI tools, but from connecting technology, data, people and processes into a value-creation system.",
-        "On slides about digital transformation (also documented in photographs) she showed that strategy, collaboration and culture are just as decisive as the technical layer.",
-        "The talk ended with an outlook on deep-seated change (“Alles wird anders”) and the call to think about performance across the whole organisation, not only through individual pilot projects."
-      ]
+        "Huber heads Digital Strategy & Culture at Drees & Sommer and is responsible for the company-wide digital transformation of the roughly 7,000-strong firm.",
+        "Her thesis: two thirds of transformation happens at the organisational level – roles, skills, processes and leadership. A report written quickly with AI is worthless if the meeting to discuss it only happens weeks later.",
+        "Drees & Sommer mirrors its digital organisation into every business unit, with dedicated digital partners and short decision paths through digital boards up to executive-board level.",
+        "Skills are built in four learning fields – AI, data, cybersecurity and soft skills – plus learning in the flow of work and a digital mentoring programme.",
+        "What matters is impact, not time saved: companies need to decide what freed-up hours are used for – for example new business models.",
+        "Her closing thought: “Alles bleibt anders” (everything stays different) – and what remains constant is people. In the discussion she added that employees tend to find adoption too slow, while security questions sometimes force the company to brake."
+      ],
+      "title": "From data to performance: how companies reach higher performance with AI",
+      "label": "Keynote 3"
     },
     "pause-foren": {
-      "abstract": "The keynotes have shown which organisational and technical preconditions are necessary. The specialist forums now turn to concrete applications, data structures, solutions and experience from planning, execution and operations. (Flyer: Pause & Networking – transition to the specialist forums until 18:10.)",
+      "abstract": "The keynotes have shown which organisational and technical preconditions are necessary. The specialist forums now turn to concrete applications, data structures, solutions and experience from planning, execution and operations.",
       "summary_bullets": [
         "After the three keynotes the first part of the programme was closed and a break was announced; from 15:30 guests were to spread out across the specialist forums and the trade exhibition.",
         "It was promised that the content would be transcribed and that, within the following one to three days, a link to a platform would be sent through which questions could still be asked afterwards."
-      ]
+      ],
+      "title": "Changeover to the two specialist forums – break and networking"
     },
     "f1-bengel": {
       "abstract": "Planning and construction processes are becoming more complex, the volume of available information is growing, and at the same time decisions have to be taken ever faster. The talk shows how digital methods can shorten the path from information to decision. This is not only about BIM or AI. Automation, structured data and digital applications can also reduce routine work, make changes visible early and make relevant information available more quickly. That leaves more time for the actual professional assessment and decision.",
       "summary_bullets": [
-        "Bengel (in the transcript “Patricia Bengel”) introduced herself with a focus on strategy and development at ATP and framed the talk as the path from information to decision.",
-        "Growing data volumes and rising time pressure in planning and construction make it necessary to reduce routine work so that professional assessment remains.",
-        "Besides BIM and AI she named automation and structured data as means of making changes visible earlier and relevant information available more quickly.",
-        "AI was described as an amplifier that needs a foundation of data that is as clean and consistent as possible – not as a substitute for the professional decision."
-      ]
+        "Bengel is responsible for strategy and development of the building-services division at ATP. Her starting point: specialists spend a large share of their working time on low-value tasks such as searching for project information.",
+        "Automation, structured data, BIM and AI are meant to reduce routine work so that more time remains for professional judgement.",
+        "In design, ATP uses optimisation tools, for example to find the best view quality for a building or the maximum number of parking spaces in an underground car park.",
+        "Her principle: the system searches for the optimum, the human defines what optimal means – and remains responsible for the decision."
+      ],
+      "title": "From data to decisions: BIM, automation and AI as accelerators"
     },
     "f1-wuerth": {
       "abstract": "Orchestrating AI systems that independently steer procurement and delivery on the construction site rarely fail because of the control logic – but because of missing, end-to-end data supply. Component data, project zones and ERP processes today usually run in separate systems. Using fastening technology as an example, the talk shows how a consistent link between component, zone and SAP data creates the foundation on which a higher-level AI can in future coordinate procurement and delivery independently. The focus is therefore not the AI itself, but the data basis without which any orchestration remains ineffective.",
       "summary_bullets": [
-        "In the transcript Matthäus Grzondziel (ASR: “Matthias”) introduces himself for Würth; Sven Assmann is a co-speaker according to the programme, but was not found by name in the transcript.",
-        "Central thesis: orchestration of procurement and delivery rarely fails because of the control logic, but because of missing, end-to-end data supply.",
-        "Components need a clear spatial assignment (project zones, not just “a room”) and a link to the schedule, so that place and time become reliable information.",
-        "Logistical pacing can follow from this: the system derives from construction progress when something is needed and must be provided.",
-        "Without structured data, “Garbage in, Garbage out” applies: unstructured or incorrect inputs lead an AI at high speed into wrong decisions."
-      ]
+        "Matthäus Grzondziel of Würth showed why AI “starves” between design and job site: orchestrating procurement and delivery rarely fails because of the logic, but because of missing, end-to-end data.",
+        "Components need a clear spatial assignment to project zones and a link to the schedule and SAP processes – only then do location and time become reliable information.",
+        "His principle is zero error tolerance in the data foundation: 100% process reliability on site requires 100% data integrity.",
+        "Once the data foundation is in place, just-in-time delivery based on actual construction progress becomes possible, and operators receive a complete as-built dataset instead of binders.",
+        "The benefits show up in tied-up capital, CO₂ reporting and liability: the data trail works like a flight recorder for the building."
+      ],
+      "title": "The data foundation for orchestration – how structured component and zone data make AI-driven procurement and delivery on site possible"
     },
     "f1-tsagkalidi": {
       "abstract_note": "On the event website and in the flyer, only the title is given, no abstract.",
       "summary_bullets": [
-        "For this time window there is a transcript passage that was matched only via the programme clock (Reachy time plus about one hour); name and company are not clearly stated in this section.",
-        "A substantively reliable, speaker-specific summary is therefore not possible without speculation."
-      ]
+        "In conversations with more than 300 project managers, the team did not find a single working task-management setup: tasks arise in meetings, emails, phone calls and chats and end up in six different systems.",
+        "Every role – site management, design, project control – makes its own system the “single source of truth”. When one person completes a task, it stays open elsewhere until someone passes the word on.",
+        "Central task management doesn't solve this. The proposal: everyone stays in their own system and an AI agent keeps the systems in sync – using “computer use” for platforms without an interface.",
+        "If schedule and meeting minutes use the same terms, the agent can measure progress per work package and build a project memory that carries lessons learned into future projects.",
+        "Recommendation: start with your own tasks, connect systems instead of replacing them – and don't measure progress by ticked-off tasks."
+      ],
+      "title": "Construction projects that think ahead",
+      "company_note": "The recording does not mention the speaker's name or company, but timing and topic clearly match this programme slot."
     },
     "f1-jaeger": {
       "abstract": "Industry is demanding ever more detailed BIM models, while planning budgets are under pressure. Not infrequently, the effort of modelling individual plant components exceeds the effort of installing them later. At the same time, planning fees often lie below the material mark-ups of the trades involved. The result: without new tools, digital planning is barely still viable economically. Using concrete practical examples from technical building services, the talk shows how artificial intelligence evaluates drawings and schematics, determines quantities automatically, and takes component and area data directly into calculations.",
-      "company_note": "Flyer: EFG Engineering Facility Group Ingenieurgesellschaft mbH",
       "summary_bullets": [
-        "The contribution sits in the time window of Jäger’s programme slot; the name “Jäger” appears in the transcript, though not as a clear self-introduction – the assignment is probable, not necessarily certain.",
-        "The core theme according to the announcement and matching transcript passages: modelling effort in TGA planning threatens to outweigh the benefit when BIM models become ever more detailed and budgets tighter.",
-        "AI can evaluate drawings and schematics, determine quantities, and take component and area data into calculations – and so make digital planning economically viable again.",
-        "Professional responsibility and checking remain with the engineers."
-      ]
+        "Jäger, managing director of a building-services engineering firm, did the maths: a ball valve with 122 attributes in the BIM model costs about €13 to buy and earns roughly €7.80 in HOAI fees – but takes around €40 of modelling effort.",
+        "All employees use Copilot; a central expert group builds dedicated agents in Copilot Studio – from a “use-case coach” to an agent architect and a skills toolkit.",
+        "What works well: plan comparisons (for example fire dampers in the floor plan versus the schematic), quantity take-offs, area lists from poor PDFs and plausibility checks of tender documents against the drawings.",
+        "Not yet reliable: generating drawings or Revit constructions. And office standards erode when Excel templates are simply uploaded to the AI.",
+        "His advice: use AI where tasks recur often, the data is good and the risk of error is manageable – and pay for two days of external AI expertise rather than experimenting alone."
+      ],
+      "title": "When the BIM model costs more than the installation: how AI rescues engineering design"
     },
     "f1-duftschmid": {
       "abstract": "What happens when a classical engineering office is organised in a hybrid way – people and AI agents working together with a division of labour? Using the example of a Munich planning office with 20 employees, this talk shows how that works in practice: five AI agents take on defined tasks in day-to-day work – from preparing explanatory reports and researching standards to personal assistance. A report that used to take 2–3 hours is today prepared in 10 minutes – checking and approval remain with the engineer. The talk sets out the necessary preconditions (data, processes, responsibilities) and the concrete benefit for planners, clients and operators.",
       "summary_bullets": [
-        "For the 16:50 time window there is a transcript passage that was matched only via the clock; the name Duftschmid is not clearly stated in this section.",
-        "According to the published talk announcement (not as evidence from a recording), the subject is five agents in a hybrid-organised office and reports that are prepared but checked and approved by the engineer.",
-        "A speaker-specific summary from the transcript of this window alone would be speculative and is therefore omitted."
-      ]
+        "Duftschmid showed how his Munich design office with around 20 employees works in a hybrid way: five AI agents take on clearly defined day-to-day tasks.",
+        "Agent “Alex” writes explanatory reports in the office's style from a growing knowledge base; another agent researches standards and always cites its sources; a third checks contracts and tender documents.",
+        "The assistant “Donna” knows the calendar, inbox and minutes templates and prepares meetings; a “Challenger” reviews everything that goes to the client from the client's perspective. A human always gives the final approval.",
+        "Agents have a self-description with role, goals and office standards – and need leadership like a junior employee. Time gained should go into quality, not just more revenue.",
+        "For roll-out he recommended a mixed core team – from the sceptic to the colleague about to retire – a pilot and then the roll-out. It took no computer scientists and no million-euro budget, but AI skills across the whole team."
+      ],
+      "title": "From the hybrid engineering office to agentic work – how five AI agents are changing everyday planning"
     },
     "f1-ocklenburg": {
       "abstract": "In work stages 6 and 7 – preparing and assisting with the tender – it is decided how quickly and economically a project is put out to tender. Using a tender as an example, the talk shows how AI produces a structured, GAEB-exportable draft bill of quantities from the plan and the building description – and where its limits lie. The often overlooked other side: every benefit of AI arises from data. Does the platform become a black box – or do you keep control? The talk shows what AI reliably takes on, where people retain responsibility, and how planners and clients keep their bidder and price data – transparent and exportable at any time.",
       "summary_bullets": [
-        "In the transcript the company Cosuno is named as a tendering and awarding platform for work stages 6 and 7; the person’s name is not clear, but the match to the programme slot is probable.",
-        "AI can prepare a structured, GAEB-exportable draft bill of quantities from the plan and the building description, but reaches professional limits that people must take responsibility for.",
-        "Every benefit arises from data: what matters is that the platform does not become a black box and that bidder and price data remain with planners and clients – transparent and exportable."
-      ]
+        "Ocklenburg presented Cosuno, a Berlin-based tendering and procurement platform founded in 2019 that today supports almost 700 partners in sending out requests and collecting bids.",
+        "In work stages 6 and 7, AI can create a structured, GAEB-exportable bill of quantities from drawings and specifications, and check bids for potential change orders and plausibility.",
+        "She described three black boxes – the third being your own data on external platforms. At Cosuno every step is documented, and uploaded data is visible only to your own team.",
+        "Two questions for any solution: can I see what the AI does and approve it? And can I take my bidder and price data with me at any time?"
+      ],
+      "title": "Data sovereignty instead of a black box: AI in tendering"
     },
     "f1-aghasi": {
       "abstract": "How does one take energy and building-services decisions early, quickly and reliably, before they become expensive? AI-supported energy simulation on the basis of BIM/IFC speeds up TGA planning, supports compliance with national energy rules, and makes value engineering data-based. Example: for a general contractor we assessed a new building of around 200,000 m² GFA in the tender. After four weeks the energy class was available, instead of conventionally more than four months. Clients compare variants while changes are still cheap, planners save variant calculations, bidders an expensive certification. Operators reduce operating costs and have an ESG/EPBD basis.",
@@ -134,89 +159,122 @@
         "The topic is the early, reliable assessment of energy and TGA variants, before changes become expensive – by simulation on the basis of building data (BIM/IFC).",
         "As a practical benchmark the announcement (and matching transcript passages on acceleration) cited an energy class in weeks rather than months, for example on a large new building.",
         "Benefit arises for clients (comparing variants), planners (fewer manual variant calculations) and operators (operating costs, ESG basis)."
-      ]
+      ],
+      "title": "Building cheaper, faster, better and with fewer resources: how the AI-based OPTIMUSE platform gets more return out of every project",
+      "company_note": "This talk is not included in the recording. At the start of the following talk a short-notice cancellation was mentioned, and Dr Petraus used the freed-up time for a longer talk."
     },
     "f1-petraus": {
       "abstract": "In the early planning phase, the decisions with the greatest leverage fall at the poorest data situation a project will ever have. Established tools demand completeness where nothing is yet complete. AI proves more robust; it can work with little, unstructured data, but brings other problems: precision, reproducibility, traceability. The talk sorts applications, from survey of the existing building to the formation of variants, by how quickly an error becomes visible. Used properly, more checked variants arise more quickly, and with them better-justified decisions. The energy-system planning of an industrial site serves as a stress test.",
       "summary_bullets": [
-        "In the transcript the TMM Group is named in this time window; the assignment to Bernd Petraus is probable.",
-        "Early planning decisions have the greatest leverage but the poorest data; classical tools often presuppose completeness that does not yet exist.",
-        "AI can work with little, unstructured data, but raises questions of precision, reproducibility and traceability.",
-        "Applications from survey of the existing building through to the formation of variants were sorted by how quickly an error becomes visible – with the energy-system planning of an industrial site as a stress test."
-      ]
+        "Petraus first explained what language models can and cannot do: they are black boxes, don't learn from individual conversations and only work with what fits into their context window – which is why humans must keep checking.",
+        "Generating a BIM model or code with AI is fast; changing it in a targeted way later is laborious. Geometry is not a language, and complete models quickly exceed any context window.",
+        "AI is especially valuable in early design because it copes with incomplete, contradictory data – teams should stay abstract for a long time and only model in detail after the key decisions.",
+        "Instead of one big AI application, he expects many small tools following the “one tool, one task” principle; work stages will shift towards more functional tendering.",
+        "As a practical example he showed a digital energy concept for an industrial site – from load profiles and land use to a comparison of variants, where grid connection and storage end up as the central questions."
+      ],
+      "title": "Deciding before the data exists: AI in the early planning phase"
     },
     "f2-muehlenbruch": {
       "abstract": "From the BIM model to the automated construction site: digital planning creates the foundation for prefabrication, automated processes and the use of robotics in construction. Concrete practical examples from BIM-supported fastening planning, digital logistics and the use of the Jaibot drilling robot show how end-to-end data flows connect planning and execution. The talk shows how construction companies can raise productivity, respond to the shortage of skilled labour, and achieve more quality, transparency and certainty of schedule and cost.",
       "summary_bullets": [
-        "After a brief introduction (“Firma Hildi”), “Axel Mbruch” introduces himself as technical lead for engineering and robotics – the assignment to Axel Mühlenbruch, Hilti, is probable.",
-        "The talk was to show the path from the digital model (TGA model on the slide) to the automated construction site, specifically to the drilling robot, which does not drill “by itself” but needs position and drilling points.",
-        "A typical BIM/TGA model alone is not enough for drilling: the information is too rudimentary; an end-to-end chain is needed from planning through to the machine on site.",
-        "Mühlenbruch stressed that there is often still less AI here than in the preceding keynotes, but instead concrete automation that can be used in practice."
-      ]
+        "Mühlenbruch, Hilti's technical lead for engineering and robotics, showed the path from digital model to automated job site using the Jaibot ceiling-drilling robot.",
+        "The robot doesn't drill “by itself”: it needs exact positions and drilling points. A typical building-services model is too coarse for this – what's needed is an end-to-end data chain from anchor planning to the machine.",
+        "On site, the system provides transparency, for example how many holes were drilled in the last few minutes and which could not be set because of collisions.",
+        "There is often less AI involved than in the keynotes, but concrete automation that raises productivity and counters the skills shortage."
+      ],
+      "title": "From BIM model to automated job site – how digital planning enables productivity, prefabrication and robotics"
     },
     "f2-mueller": {
       "abstract": "How does a fan become an intelligent system component? The talk shows how operating data, AI and digital services enable the step from reactive to predictive maintenance. Using vibration and bearing monitoring as an example, it becomes clear how AI assesses conditions and, beyond that, can support the entire service chain from diagnosis and assistance through to continuous optimisation.",
       "summary_bullets": [
-        "The contribution is announced in the transcript as a talk by “Zell Abig” / “Zel Abig”, expressly as a fan manufacturer for building services – the assignment to ZIEHL-ABEGG is probable; the personal name André Müller does not appear.",
-        "The topic is recognising conditions on the fan and avoiding failures (predictive maintenance, typically via vibration and bearing signals).",
-        "Because the speaker’s name is missing, the statements are deliberately limited to the company and the topic."
-      ]
+        "Ziehl-Abegg has annual revenue of around one billion euros, about 90% of it from fans for ventilation and air-conditioning systems, heat pumps and residential ventilation.",
+        "Modern EC fans have a vibration sensor directly on the circuit board. This allows bearing condition and imbalance to be monitored continuously instead of sending technicians to hundreds of units.",
+        "Because temperature, installation and age all affect vibration values, Ziehl-Abegg uses a neural network on its own servers to distinguish normal operation from developing damage.",
+        "This turns rigid maintenance intervals into predictive maintenance: a bearing is neither replaced too early nor fails unexpectedly after a fraction of its expected service life."
+      ],
+      "title": "AI in the fan: detect conditions, prevent failures, secure operations"
     },
     "f2-belimo": {
       "abstract": "Using a meeting room in daily use as an example, the talk shows how high-quality data leads to better decisions in building operations. Precise room sensors record temperature, CO₂ and humidity reliably, including under real installation conditions. The Belimo Energy Valve measures the power actually supplied and optimises operation directly via the ΔT-Manager. In the MID-certified version, the energy values can also serve as a basis for possible billing. When room, plant and energy data are brought together, transparency, efficiency and a robust basis for AI-supported analyses and further optimisations are created.",
       "summary_bullets": [
-        "One person introduces themselves as being from Belimo (“Wir machen die orangenen Antriebe”); which of the two programme names (Philipp Becker, Alexander Saumer) is speaking is unclear from the speech recognition.",
-        "According to the announcement and matching transcript passages, high-quality room and energy data come at the start of good operating decisions (temperature, CO₂, humidity).",
-        "On the product side, the Energy Valve or the measurement of the power actually supplied, and the use of certified energy data as a basis for analyses and possible billing, were discussed.",
-        "Combined room, plant and energy data are intended to create transparency, efficiency and a basis for later AI analyses."
-      ]
+        "Alexander Saumer of Belimo (“we make the orange actuators”) used a meeting room to show how good data leads to better decisions in building operation.",
+        "Precise room sensors for temperature, CO₂ and humidity must be accurate under real installation conditions – a CO₂ sensor, for example, gives off heat itself, which can distort the reading.",
+        "The Belimo Energy Valve measures the power actually delivered and optimises operation via the ΔT manager; in its MID-certified version, the values can even be used for billing.",
+        "Combined room and energy data reveal what a warehouse, production hall or individual building wing consumes – the basis for later AI analyses."
+      ],
+      "title": "From sensor to decision: how high-quality room and energy data enable intelligent buildings",
+      "company_note": "In the recording, Alexander Saumer presents."
     },
     "f2-voelkerling": {
       "abstract": "How can we use AI profitably in processes and products? That is a question every company faces today. In the ventilation sector too we use AI to optimise internal processes and to advance projects on the use of AI in our products. Where do we stand in this development today? What are the preconditions for the successful use of AI? At TROX, AI is already used in several areas: in production, AI helps to detect anomalies early; in sales, orders are captured automatically. Internal chatbots support the search for information; in research, the use of machine learning for fault detection in air-handling units is being trialled.",
       "summary_bullets": [
-        "Völkerling introduces herself by name and places herself in the AI team of IT at TROX (for about five years) – the assignment is certain.",
-        "The talk offered practical experience of using AI in ventilation technology, not merely a promise for the future.",
-        "In the transcript and in the advance description, applications appear in production (anomaly detection), sales (for example automatic order capture) and internal assistants, as well as machine learning for fault detection on air-handling units."
-      ]
+        "Völkerling has worked in TROX's IT AI team for around five years and reported how the ventilation manufacturer already uses AI today – in processes and in products.",
+        "Internally, TROX runs its own open-source-based chatbot that knows the website and intranet, as well as AI-supported order capture that extracts orders from emails and attachments.",
+        "Feedback and quality monitoring are essential – otherwise nobody notices when a chatbot talks nonsense.",
+        "In research and production, machine learning is being tested to detect anomalies and faults in air-handling units early from vibration and operating data."
+      ],
+      "title": "AI in ventilation technology: practical experience at TROX"
     },
     "f2-rauh": {
       "abstract": "The decarbonisation of existing buildings confronts owners with the challenge of meeting climate targets, economic viability and security of supply at the same time. Using the modular refurbishment of a care home as an example, it is shown how a step-by-step transformation can succeed during ongoing operation. At the same time it is shown how the preconditions for energy-flexible operation in the future can already be created today, in order to be prepared for dynamic energy markets, grid requirements and new business models.",
-      "company_note": "Event website: Bosch Energy and Building Solutions GmbH. Flyer: Buderus. Participant dossier: Bosch Energy and Building Solutions / Buderus.",
       "summary_bullets": [
-        "Thematically the section clearly matches the programme title on energy flexibility through modular refurbishment of a care home; the person speaking introduces themselves in the transcript as “Christian” from “Firma Bosch” – not as Johannes Rauh. The person’s identity is therefore unclear and should be checked.",
-        "The contribution describes the pressure of electrification (heat pumps, process heat, flexible tariffs, storage, building connection) on existing buildings such as businesses and care or health facilities.",
-        "Modular refurbishment is intended to connect energy efficiency, security of supply and flexibility, without underestimating the complexity of the energy transition."
-      ]
+        "Electrification is changing existing buildings: heat pumps, electric process heat, storage, flexible tariffs and the grid connection all have to be considered together.",
+        "Bosch takes a step-by-step approach: first a potential analysis and concept (eligible for up to 60% funding), then implementation in stages through to plant operation.",
+        "In the case of a care facility with two gas boilers, air-to-water heat pumps cover around 65% of the heat demand in the first step; gas is kept only for peak loads. The goal is a supply based entirely on renewable energy.",
+        "Central energy monitoring for gas and electricity and control via Logamatic 5000 create the data basis to run the heat pump when electricity prices are low, for example."
+      ],
+      "title": "Creating energy flexibility: how the modular refurbishment of a care home combines efficiency, security of supply and decarbonisation",
+      "company_note": "Because of illness, the talk was given by a Bosch colleague, a project lead for energy efficiency, standing in for Johannes Rauh."
     },
     "f2-helbig": {
       "abstract": "How does a manufacturing company identify savings potential and assess investments on a sound basis? Brugger Magnetsysteme brings energy data from production, building services and photovoltaics together centrally in the Mondas data platform. The measured data show what measures really deliver: the LED conversion, for example, reduced electricity consumption by around 50%. At the same time, real load profiles form the basis for addressing PV self-consumption, load peaks and battery storage in a targeted way. The talk shows how energy data become decisions and how energy costs can in future be attributed to individual machines and products.",
       "summary_bullets": [
-        "In the transcript, “Monondas”, the conversation with Geschäftsführer Thomas Brugger and the case of a manufacturer of magnet systems appear; the name Miriam Helbig is missing. It is mentioned that they are appearing “zu dritt” (as a group of three). The slot assignment is probable, the exact speaker role unclear.",
-        "The starting point at the customer was transparency over machine consumption, not “AI for AI’s sake” first.",
-        "Energy data from production, building services and photovoltaics are brought together on a data platform; a documented example is the LED conversion with a marked reduction in electricity consumption (in the announcement: around 50%).",
-        "The aim is to derive decisions from measured data and, looking ahead, to attribute energy costs to machines and products."
-      ]
+        "Helbig presented Mondas, an energy-data platform from Freiburg, spun off from Fraunhofer ISE in 2018 and now around 30 people strong.",
+        "At Brugger Magnetsysteme, energy data from production, building services and photovoltaics are brought together centrally. The starting point was the wish for transparency about machine consumption – AI comes later.",
+        "The measurements show what measures achieve: the switch to LED cut lighting electricity consumption by around 50%.",
+        "A “peak-load traffic light” warns when grid draw exceeds the self-imposed limit of 160 kW (the transformer is rated for 250 kW, and 207 kW has already been measured) – the basis for battery storage and machine control."
+      ],
+      "title": "From energy data to measurable savings: the Brugger Magnetsysteme case"
     },
     "f2-ferstl": {
       "abstract": "In modern production and clean-room plants, cybersecurity is increasingly becoming a fundamental requirement for building automation. Using the example of a newly built high-tech production plant in Berlin, the talk shows how cybersecurity, high availability and high-performance automation can be combined. The Saia PCD QronoX controller is used, with Security Level 3 according to IEC 62443 and a redundant control architecture. The connection via BACnet enables integration into the building automation. The practical case shows how cybersecurity can already be implemented consistently down to the controller level when a new building is planned.",
       "summary_bullets": [
-        "Ferstl introduces himself by name as Vertriebsleiter Süd; the company sounds in the transcript like “S Birges Co” (Saia Burgess Controls / SBC) – the assignment is certain.",
-        "The topic is secure and redundant automation (in the transcript “Korrugsteuerung”) with cybersecurity according to IEC 62443, Security Level 3.",
-        "High availability and security are to be thought together, not as a later add-on; the practical case is aimed at a high-tech production environment.",
-        "The controller should be integrable into the building automation; cybersecurity begins already in planning, not only in operation."
-      ]
+        "Ferstl, head of sales South at SBC (Saia Burgess Controls), used real cases to show why cybersecurity is a must in building automation – such as hacked refrigerated counters that suddenly heated instead of cooled.",
+        "The more open and connected systems are, the larger the attack surface. What's needed is a controller that repels attacks, is fail-safe and always operates consistently.",
+        "In the case of a new high-tech production facility in Berlin, the Saia PCD QronoX controller is used with security level 3 according to IEC 62443 and a redundant control architecture, connected via BACnet.",
+        "His conclusion: cybersecurity has to be designed into a new building right down to the controller level from the planning stage."
+      ],
+      "title": "Secure and redundant automation with the QronoX controller"
     },
     "f2-pfau": {
       "abstract": "How can AI make building operations more predictive without taking people out of responsibility? Using the practical example of predictive and prescriptive maintenance, the talk shows how operating data from building automation and HVAC are used to detect deviations early, narrow down causes and prioritise measures. Preconditions are connected systems, structured and contextualised data, and clear goals and rights of intervention. AI supports analysis and workflows; people set guardrails and validate decisions. In this way, effort and operational risks can be reduced and availability, energy efficiency and user comfort improved.",
       "summary_bullets": [
-        "The speaker introduces himself as “Simon V” of Siemens AG – the assignment to Simon Pfau is probable.",
-        "Many so-called smart buildings remain a patchwork of individual solutions and dashboards; the next step is to link data across them.",
-        "The vision (already partly reality) is the human-centric, autonomous building: AI helps to detect deviations early and propose measures; people set guardrails and remain responsible.",
-        "As preconditions he named connectivity, a data strategy already in planning (“Smart Ready”) and clear use cases in operation; in average figures he spoke of noticeable energy-cost reductions when flexible generators and consumers work together."
-      ]
+        "Pfau presented Siemens' vision of the human-centric, autonomous building – which is already partly reality. Many “smart” buildings today are still a patchwork of individual solutions.",
+        "Generation, storage and consumption are scheduled 24 hours ahead and then adjusted live; on average this cuts total energy costs by around 15% and noticeably raises self-consumption.",
+        "An “energy twin” simulates scenarios in under 30 minutes instead of one to two weeks as before; in engineering, around 25% of the effort could be saved.",
+        "AI detects deviations early and prioritises measures; humans set the guardrails and decide. The prerequisites are connected systems and a data strategy from the planning stage onwards."
+      ],
+      "title": "Human-centric autonomous buildings: with AI from reactive to predictive building operation"
     },
     "abschluss": {
-      "abstract": "From impulse to implementation: the next steps. Michael Aechtler and Heino Wolkenhauer."
+      "abstract": "From impulse to implementation: the next steps. Michael Aechtler and Heino Wolkenhauer.",
+      "title": "Closing: from impulse to implementation – the next steps"
     }
-  }
+  },
+  "roles": {
+    "Bürgermeister": "Mayor",
+    "Geschäftsführer": "Managing Director"
+  },
+  "subtitle": "AI in planning, construction and building operations",
+  "venue": "Bürgerhaus Kernen-Rommelshausen, 71394 Kernen im Remstal",
+  "takeaway_heads": [
+    "Processes before tools",
+    "Agents prepare, people decide",
+    "No AI without good data",
+    "Early planning has the biggest leverage",
+    "Measure and automate first",
+    "Security belongs in the design",
+    "Leadership and culture matter",
+    "The conversation continues"
+  ]
 }
