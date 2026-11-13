@@ -1,5 +1,5 @@
 // Renders the /[lang]/print/ route of the static export to A4 PDFs plus cover thumbnails.
-// Usage: npm run build (next build) && npm run pdf
+// Usage: npm run build:pdf  (local only; Vercel serves the committed PDFs from public/)
 import { createServer } from "node:http";
 import { readFile, copyFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";

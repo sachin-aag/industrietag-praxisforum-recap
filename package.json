@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/build-pdf.mjs",
-    "build:site": "next build",
+    "build": "next build",
+    "build:pdf": "next build && node scripts/build-pdf.mjs",
     "pdf": "node scripts/build-pdf.mjs",
     "start": "next start"
   },
