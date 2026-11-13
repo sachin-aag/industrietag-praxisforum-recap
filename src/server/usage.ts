@@ -1,7 +1,6 @@
 import "server-only";
 
-// Lifetime usage per attendee (questions + tokens), stored in Upstash Redis via its REST API.
-// Vercel's Upstash integration sets KV_REST_API_URL / KV_REST_API_TOKEN; plain Upstash uses UPSTASH_REDIS_REST_*.
+// Lifetime usage per attendee (questions + tokens), stored in Upstash Redis.
 
 export const limits = {
   queries: () => Number(process.env.CHAT_MAX_QUERIES || 100),
@@ -10,41 +9,9 @@ export const limits = {
 
 export type Usage = { queries: number; tokens: number; maxQueries: number; maxTokens: number };
 
-const redisUrl = () => process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-const redisToken = () => process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+import { redis, UsageStoreMissing } from "./redis";
 
-export class UsageStoreMissing extends Error {}
-
-// Local development fallback only.
-const g = globalThis as { __pfUsage?: Map<string, number> };
-const memory = (g.__pfUsage ??= new Map<string, number>());
-
-async function redis(commands: (string | number)[][]): Promise<(number | string | null)[]> {
-  const url = redisUrl();
-  const token = redisToken();
-  if (!url || !token) {
-    if (process.env.NODE_ENV === "production") throw new UsageStoreMissing("Upstash Redis is not configured");
-    return commands.map(([cmd, key, arg]) => {
-      const k = String(key);
-      if (cmd === "GET") return memory.get(k) ?? null;
-      const next = (memory.get(k) ?? 0) + (cmd === "INCRBY" ? Number(arg) : cmd === "DECR" ? -1 : 1);
-      memory.set(k, next);
-      return next;
-    });
-  }
-  const res = await fetch(`${url.replace(/\/$/, "")}/pipeline`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify(commands),
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`Upstash ${res.status}: ${await res.text()}`);
-  const out = (await res.json()) as { result?: number | string | null; error?: string }[];
-  return out.map((r) => {
-    if (r.error) throw new Error(`Upstash: ${r.error}`);
-    return r.result ?? null;
-  });
-}
+export { UsageStoreMissing };
 
 const keys = (email: string) => ({ q: `pf:usage:${email}:queries`, t: `pf:usage:${email}:tokens` });
 

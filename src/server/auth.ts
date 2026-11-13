@@ -2,16 +2,13 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { env } from "./env";
+import { isAllowed, normalizeEmail } from "./allowlist";
+
+export { isAllowed, normalizeEmail };
 
 export const SESSION_COOKIE = "pf_session";
 const SESSION_DAYS = 30;
 const LINK_MINUTES = 20;
-
-export const normalizeEmail = (e: string) => e.trim().toLowerCase();
-
-export function isAllowed(email: string) {
-  return env.allowedEmails().has(normalizeEmail(email));
-}
 
 export async function createLoginToken(email: string, lang: string) {
   return new SignJWT({ email: normalizeEmail(email), lang, purpose: "login" })
@@ -51,7 +48,7 @@ export async function currentUser(): Promise<{ email: string } | null> {
   try {
     const { payload } = await jwtVerify(token, env.authSecret(), { algorithms: ["HS256"] });
     if (payload.purpose !== "session" || typeof payload.email !== "string") return null;
-    if (!isAllowed(payload.email)) return null;
+    if (!(await isAllowed(payload.email))) return null;
     return { email: payload.email };
   } catch {
     return null;
