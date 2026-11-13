@@ -3,3 +3,8 @@ node_modules/
 out/
 .vercel/
 .env*
+
+# raw transcripts (private, never commit)
+content/raw/
+.env*.local
+!.env.example
