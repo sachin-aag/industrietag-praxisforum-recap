@@ -2,6 +2,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { t } from "@/i18n/ui";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 
 export default async function SiteLayout({
   children,
@@ -20,6 +21,7 @@ export default async function SiteLayout({
       <Header lang={lang} />
       <main id="main">{children}</main>
       <Footer lang={lang} />
+      <ChatWidget lang={lang} />
     </>
   );
 }
