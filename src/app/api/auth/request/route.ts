@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   }
   // Only registered attendees get a link. The response is identical either way, so the endpoint
   // can't be used to find out who is on the list.
-  if (isAllowed(email)) {
+  if (await isAllowed(email)) {
     const origin = env.siteUrl() ?? new URL(req.url).origin;
     const token = await createLoginToken(email, lang);
     try {

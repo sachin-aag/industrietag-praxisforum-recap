@@ -8,3 +8,4 @@ out/
 content/raw/
 .env*.local
 !.env.example
+.vercel
