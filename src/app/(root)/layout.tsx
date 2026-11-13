@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
   title: "Praxisforum 2026 – Rückblick",
+  robots: { index: false, follow: true },
+  alternates: { canonical: "/de/" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

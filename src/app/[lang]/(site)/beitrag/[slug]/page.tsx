@@ -5,6 +5,7 @@ import { t } from "@/i18n/ui";
 import { data, showCompanyLink, showLinkedIn } from "@/lib/data";
 import { localizedTalk, photosForTalk, summaryState, talkTitle, trackLabel } from "@/lib/i18n";
 import { PeakLoadChart, ValveCostChart } from "@/components/Infographics";
+import { pageMetadata, snippet } from "@/lib/seo";
 
 export function generateStaticParams() {
   return locales.flatMap((lang) =>
@@ -16,7 +17,16 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang, slug } = await params;
   const base = data.talks.find((item) => item.slug === slug);
   const l: Locale = isLocale(lang) ? lang : "de";
-  return { title: base ? localizedTalk(base, l).title : t(l).talkFallbackTitle };
+  if (!base) return { title: t(l).talkFallbackTitle };
+  const talk = localizedTalk(base, l);
+  const who = talk.speakers.map((s) => `${s.name} (${s.company})`).join(", ");
+  const lead = talk.has_summary && talk.summary_bullets?.length ? talk.summary_bullets[0] : talk.abstract ?? "";
+  const title = talk.label ? `${talk.label}: ${talk.title}` : talk.title;
+  return pageMetadata(l, `/beitrag/${slug}/`, {
+    title,
+    description: snippet(`${who ? who + ": " : ""}${lead}`),
+    type: "article",
+  });
 }
 
 export default async function TalkPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {

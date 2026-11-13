@@ -4,6 +4,8 @@ import { isLocale, localizedPath, type Locale } from "@/i18n/config";
 import { t } from "@/i18n/ui";
 import { Horizon } from "@/components/Horizon";
 import { Timetable } from "@/components/Timetable";
+import { pageMetadata, siteUrl } from "@/lib/seo";
+import { data } from "@/lib/data";
 import { AudienceChart, TalkFigures } from "@/components/Infographics";
 import {
   dateLabel,
@@ -14,6 +16,44 @@ import {
   timesFor,
   transcriptionNote,
 } from "@/lib/i18n";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  return isLocale(lang) ? pageMetadata(lang, "/") : {};
+}
+
+function eventJsonLd(lang: Locale) {
+  const base = siteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: data.title,
+    alternateName: subtitle(lang),
+    description: t(lang).metaDescription,
+    startDate: "2026-11-10T11:00:00+01:00",
+    endDate: "2026-11-10T22:00:00+01:00",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    inLanguage: "de",
+    isAccessibleForFree: true,
+    url: `${base}/${lang}/`,
+    image: [`${base}/og-${lang}.png`],
+    location: {
+      "@type": "Place",
+      name: "Bürgerhaus Kernen-Rommelshausen",
+      address: { "@type": "PostalAddress", addressLocality: "Kernen im Remstal", postalCode: "71394", addressCountry: "DE" },
+    },
+    organizer: [
+      { "@type": "Organization", name: "Wilhelm Schetter GmbH Haustechnik", url: "https://www.schetter.de/" },
+      { "@type": "Organization", name: "Gamechangerz", url: "https://gamechangerz.io/" },
+    ],
+    performer: data.talks
+      .filter((x) => x.type === "talk")
+      .flatMap((x) => x.speakers)
+      .filter((s, i, all) => all.findIndex((o) => o.name === s.name) === i)
+      .map((s) => ({ "@type": "Person", name: s.name, affiliation: { "@type": "Organization", name: s.company } })),
+  };
+}
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: raw } = await params;
@@ -28,6 +68,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd(lang)) }} />
       <section className="hero">
         <div className="wrap hero-inner">
           <div className="hero-text">

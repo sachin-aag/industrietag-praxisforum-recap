@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { t } from "@/i18n/ui";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  return { title: t(isLocale(lang) ? lang : "de").imprintTitle };
+  const l = isLocale(lang) ? lang : "de";
+  const copy = t(l);
+  return pageMetadata(l, "/impressum/", { title: copy.imprintTitle });
 }
 
 export default async function ImpressumPage({ params }: { params: Promise<{ lang: string }> }) {

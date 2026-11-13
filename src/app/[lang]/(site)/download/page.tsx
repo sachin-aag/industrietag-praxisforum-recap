@@ -2,11 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, localizedPath, type Locale } from "@/i18n/config";
 import { t } from "@/i18n/ui";
+import { pageMetadata } from "@/lib/seo";
 import { pdfHref } from "@/lib/i18n";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  return { title: t(isLocale(lang) ? lang : "de").downloadTitle };
+  const l = isLocale(lang) ? lang : "de";
+  const copy = t(l);
+  return pageMetadata(l, "/download/", { title: copy.downloadTitle, description: copy.downloadIntro });
 }
 
 export default async function DownloadPage({ params }: { params: Promise<{ lang: string }> }) {

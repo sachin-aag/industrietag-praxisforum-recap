@@ -1,12 +1,18 @@
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "../globals.css";
 import { isLocale, locales } from "@/i18n/config";
 import { t } from "@/i18n/ui";
+import { pageMetadata, siteUrl } from "@/lib/seo";
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
+
+export const viewport: Viewport = {
+  themeColor: "#2a4b9b",
+  colorScheme: "light",
+};
 
 export async function generateMetadata({
   params,
@@ -17,9 +23,17 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {};
   const copy = t(lang);
   return {
+    metadataBase: new URL(siteUrl()),
     title: { default: copy.metaTitleDefault, template: copy.metaTitleTemplate },
-    description: copy.metaDescription,
-    alternates: { languages: { de: "/de/", en: "/en/" } },
+    applicationName: "Praxisforum 2026",
+    authors: [{ name: "Wilhelm Schetter GmbH Haustechnik" }, { name: "Gamechangerz" }],
+    keywords:
+      lang === "de"
+        ? ["Industrietag Rems-Murr", "Praxisforum 2026", "KI im Bau", "KI Gebäudetechnik", "TGA", "BIM", "Gebäudebetrieb", "Schetter", "Gamechangerz", "Kernen im Remstal"]
+        : ["Industrietag Rems-Murr", "Praxisforum 2026", "AI in construction", "building services", "BIM", "building operations", "Schetter", "Gamechangerz"],
+    robots: { index: true, follow: true },
+    formatDetection: { telephone: false },
+    ...pageMetadata(lang, "/"),
   };
 }
 
