@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentUser } from "@/server/auth";
+import { currentUser, touchSession } from "@/server/auth";
 import { getUsage } from "@/server/usage";
 
 export const runtime = "nodejs";
@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const user = await currentUser();
+  if (user) await touchSession(user.email);
   let questionsLeft: number | null = null;
   if (user) {
     try {

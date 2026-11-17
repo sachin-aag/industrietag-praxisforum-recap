@@ -1,4 +1,4 @@
-import { currentUser } from "@/server/auth";
+import { currentUser, touchSession } from "@/server/auth";
 import { env } from "@/server/env";
 import { retrieve, systemPrompt } from "@/server/knowledge";
 import { hit } from "@/server/ratelimit";
@@ -12,6 +12,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 export async function POST(req: Request) {
   const user = await currentUser();
   if (!user) return new Response("unauthorized", { status: 401 });
+  await touchSession(user.email);
   if (!hit(`chat:${user.email}`, 40, 60 * 60_000)) return new Response("rate_limited", { status: 429 });
 
   const body = (await req.json().catch(() => ({}))) as { messages?: Msg[]; lang?: string };

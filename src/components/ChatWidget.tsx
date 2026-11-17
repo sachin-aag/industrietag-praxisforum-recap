@@ -125,7 +125,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
 
   const refreshUser = useCallback(async () => {
     try {
-      const r = await fetch("/api/auth/me/", { cache: "no-store" });
+      const r = await fetch("/api/auth/me/", { cache: "no-store", credentials: "same-origin" });
       const j = (await r.json()) as { user: { email: string } | null; questionsLeft: number | null };
       setUser(j.user?.email ?? null);
       setLeft(j.questionsLeft);
@@ -154,9 +154,10 @@ export function ChatWidget({ lang }: { lang: Locale }) {
     }
   }, [t.expired]);
 
+  // Restore signed-in state after a full page reload (httpOnly session cookie).
   useEffect(() => {
-    if (open && phase === "loading") refreshUser();
-  }, [open, phase, refreshUser]);
+    refreshUser();
+  }, [refreshUser]);
 
   useEffect(() => {
     try {
