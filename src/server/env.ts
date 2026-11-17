@@ -22,7 +22,7 @@ export const env = {
    */
   maxOutputTokens: () => {
     const n = Number(process.env.OPENROUTER_MAX_TOKENS);
-    return Number.isFinite(n) && n >= 256 ? Math.min(Math.floor(n), 8192) : 4096;
+    return Number.isFinite(n) && n >= 256 ? Math.min(Math.floor(n), 16384) : 10_000;
   },
   /**
    * Gemini 3.x defaults to medium thinking. Low is enough for grounded recap Q&A
