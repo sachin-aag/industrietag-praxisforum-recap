@@ -13,7 +13,8 @@ export const env = {
   /** e.g. "Praxisforum 2026 <praxisforum@yourdomain.de>" – must be a verified Resend sender. */
   mailFrom: () => req("AUTH_EMAIL_FROM"),
   openrouterKey: () => req("OPENROUTER_API_KEY"),
-  model: () => process.env.OPENROUTER_MODEL || "google/gemma-4-31b-it:free",
+  /** OpenRouter model slug. Override with OPENROUTER_MODEL (e.g. in Vercel env). */
+  model: () => process.env.OPENROUTER_MODEL || "google/gemini-3.6-flash",
   /** Public origin used in magic links, e.g. https://recap.example.de (falls back to the request origin). */
   siteUrl: () => process.env.SITE_URL?.replace(/\/$/, ""),
   /** Comma- or newline-separated list of registered attendees. Kept out of the (public) repo. */
