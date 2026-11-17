@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
+import { splitMarkdownBlocks } from "@/lib/assistant-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Phase = "loading" | "anon" | "sent" | "chat";
@@ -69,39 +70,40 @@ const T = {
   },
 };
 
-/** Minimal, safe rendering: paragraphs, "- " lists, **bold** and [text](/internal/link). */
+/** Safe inline: [text](/path), **bold**, *emphasis*. */
+function inline(s: string, key: string): ReactNode[] {
+  const parts: ReactNode[] = [];
+  const re = /\[([^\]]+)\]\((\/[^)\s]*)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let i = 0;
+  while ((m = re.exec(s))) {
+    if (m.index > last) parts.push(s.slice(last, m.index));
+    if (m[1]) parts.push(<a key={`${key}-${i++}`} href={m[2]}>{m[1]}</a>);
+    else if (m[3]) parts.push(<strong key={`${key}-${i++}`}>{m[3]}</strong>);
+    else parts.push(<em key={`${key}-${i++}`}>{m[4]}</em>);
+    last = m.index + m[0].length;
+  }
+  if (last < s.length) parts.push(s.slice(last));
+  return parts;
+}
+
+/** Paragraphs and "- " lists; tolerates common LLM markdown mistakes. */
 function Rich({ text }: { text: string }) {
-  const inline = (s: string, key: string) => {
-    const parts: React.ReactNode[] = [];
-    const re = /\[([^\]]+)\]\((\/[^)\s]*)\)|\*\*([^*]+)\*\*/g;
-    let last = 0;
-    let m: RegExpExecArray | null;
-    let i = 0;
-    while ((m = re.exec(s))) {
-      if (m.index > last) parts.push(s.slice(last, m.index));
-      if (m[1]) parts.push(<a key={`${key}-${i++}`} href={m[2]}>{m[1]}</a>);
-      else parts.push(<strong key={`${key}-${i++}`}>{m[3]}</strong>);
-      last = m.index + m[0].length;
-    }
-    if (last < s.length) parts.push(s.slice(last));
-    return parts;
-  };
-  const blocks = text.trim().split(/\n{2,}/);
+  const blocks = splitMarkdownBlocks(text);
   return (
     <>
-      {blocks.map((b, bi) => {
-        const lines = b.split("\n");
-        if (lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) {
-          return (
-            <ul key={bi}>
-              {lines.map((l, li) => (
-                <li key={li}>{inline(l.replace(/^\s*([-*•]|\d+\.)\s+/, ""), `${bi}-${li}`)}</li>
-              ))}
-            </ul>
-          );
-        }
-        return <p key={bi}>{lines.flatMap((l, li) => (li ? [<br key={`br${li}`} />, ...inline(l, `${bi}-${li}`)] : inline(l, `${bi}-${li}`)))}</p>;
-      })}
+      {blocks.map((b, bi) =>
+        b.kind === "ul" ? (
+          <ul key={bi}>
+            {b.items.map((item, li) => (
+              <li key={li}>{inline(item, `${bi}-${li}`)}</li>
+            ))}
+          </ul>
+        ) : (
+          <p key={bi}>{inline(b.text, `p-${bi}`)}</p>
+        )
+      )}
     </>
   );
 }
