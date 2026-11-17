@@ -9,6 +9,43 @@ import { normalizeEmail } from "@/lib/normalize-email";
 type Msg = { role: "user" | "assistant"; content: string; incomplete?: boolean };
 type Phase = "loading" | "anon" | "sent" | "denied" | "chat";
 
+const LEGACY_CHAT_KEY = "pf-chat";
+const chatStorageKey = (email: string) => `pf-chat:${email}`;
+
+function parseStoredMessages(raw: string | null): Msg[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const list = Array.isArray(parsed)
+      ? parsed
+      : parsed && typeof parsed === "object" && Array.isArray((parsed as { messages?: unknown }).messages)
+        ? (parsed as { messages: unknown[] }).messages
+        : [];
+    const out: Msg[] = [];
+    for (const item of list) {
+      if (!item || typeof item !== "object") continue;
+      const role = (item as { role?: unknown }).role;
+      const content = (item as { content?: unknown }).content;
+      if (role !== "user" && role !== "assistant") continue;
+      if (typeof content !== "string" || !content.trim()) continue;
+      out.push({ role, content });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+function readLocalHistory(email: string): Msg[] {
+  try {
+    const keyed = parseStoredMessages(sessionStorage.getItem(chatStorageKey(email)));
+    if (keyed.length) return keyed;
+    return parseStoredMessages(sessionStorage.getItem(LEGACY_CHAT_KEY));
+  } catch {
+    return [];
+  }
+}
+
 const ACCESS_CONTACT = "sachin@gamechangerz.io";
 
 const T = {
@@ -138,10 +175,22 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   const refreshUser = useCallback(async () => {
     try {
       const r = await fetch("/api/auth/me/", { cache: "no-store", credentials: "same-origin" });
-      const j = (await r.json()) as { user: { email: string } | null; questionsLeft: number | null };
+      const j = (await r.json()) as {
+        user: { email: string } | null;
+        questionsLeft: number | null;
+        messages?: Msg[];
+      };
       setUser(j.user?.email ?? null);
       setLeft(j.questionsLeft);
-      setPhase(j.user ? "chat" : "anon");
+      if (j.user) {
+        const server = Array.isArray(j.messages) ? j.messages : [];
+        const local = readLocalHistory(j.user.email);
+        setMessages(server.length >= local.length ? server : local);
+        setPhase("chat");
+      } else {
+        setMessages([]);
+        setPhase("anon");
+      }
     } catch {
       setPhase("anon");
     }
@@ -158,12 +207,6 @@ export function ChatWidget({ lang }: { lang: Locale }) {
       const q = p.toString();
       window.history.replaceState(null, "", window.location.pathname + (q ? `?${q}` : "") + window.location.hash);
     }
-    try {
-      const saved = sessionStorage.getItem("pf-chat");
-      if (saved) setMessages(JSON.parse(saved));
-    } catch {
-      /* storage unavailable */
-    }
   }, [t.expired]);
 
   // Restore signed-in state after a full page reload (httpOnly session cookie).
@@ -172,13 +215,18 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   }, [refreshUser]);
 
   useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
+    if (!user || messages.length === 0) return;
     try {
-      sessionStorage.setItem("pf-chat", JSON.stringify(messages.slice(-20)));
+      sessionStorage.setItem(
+        chatStorageKey(user),
+        JSON.stringify({ updatedAt: Date.now(), messages: messages.slice(-40).map(({ role, content }) => ({ role, content })) })
+      );
+      sessionStorage.removeItem(LEGACY_CHAT_KEY);
     } catch {
       /* storage unavailable */
     }
-    listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
-  }, [messages]);
+  }, [messages, user]);
 
   useEffect(() => {
     if (!open) return;
@@ -277,6 +325,12 @@ export function ChatWidget({ lang }: { lang: Locale }) {
 
   async function logout() {
     await fetch("/api/auth/logout/", { method: "POST" }).catch(() => {});
+    try {
+      if (user) sessionStorage.removeItem(chatStorageKey(user));
+      sessionStorage.removeItem(LEGACY_CHAT_KEY);
+    } catch {
+      /* storage unavailable */
+    }
     setUser(null);
     setMessages([]);
     setPhase("anon");

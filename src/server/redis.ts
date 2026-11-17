@@ -12,8 +12,8 @@ export class UsageStoreMissing extends Error {}
 export const redisConfigured = () => Boolean(redisUrl() && redisToken());
 
 // Local development fallback only (counters and sets, enough for usage + allowlist).
-const g = globalThis as { __pfMem?: Map<string, number>; __pfSets?: Map<string, Set<string>> };
-const memory = (g.__pfMem ??= new Map<string, number>());
+const g = globalThis as { __pfMem?: Map<string, number | string>; __pfSets?: Map<string, Set<string>> };
+const memory = (g.__pfMem ??= new Map<string, number | string>());
 const sets = (g.__pfSets ??= new Map<string, Set<string>>());
 
 type Result = number | string | null | string[];
@@ -37,8 +37,17 @@ export async function redis(commands: (string | number)[][]): Promise<Result[]> 
           args.forEach((a) => set.add(String(a)));
           sets.set(k, set);
           return args.length;
+        case "SET":
+          memory.set(k, String(args[0]));
+          return "OK";
+        case "SETEX":
+          memory.set(k, String(args[1]));
+          return "OK";
+        case "DEL":
+          memory.delete(k);
+          return 1;
         default: {
-          const next = (memory.get(k) ?? 0) + (cmd === "INCRBY" ? Number(args[0]) : cmd === "DECR" ? -1 : 1);
+          const next = Number(memory.get(k) ?? 0) + (cmd === "INCRBY" ? Number(args[0]) : cmd === "DECR" ? -1 : 1);
           memory.set(k, next);
           return next;
         }

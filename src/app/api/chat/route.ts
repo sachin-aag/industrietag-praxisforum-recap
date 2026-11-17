@@ -5,6 +5,7 @@ import { env } from "@/server/env";
 import { retrieve, systemPrompt } from "@/server/knowledge";
 import { OpenRouterSseParser } from "@/server/openrouter-sse";
 import { hit } from "@/server/ratelimit";
+import { appendTurn } from "@/server/history";
 import { UsageStoreMissing, addTokens, releaseQuery, reserveQuery } from "@/server/usage";
 import { encodeChatMeta } from "@/lib/chat-stream";
 
@@ -96,6 +97,7 @@ export async function POST(req: Request) {
       let upstreamConnectMs = 0;
       let streamMs = 0;
       let answerChars = 0;
+      let answerText = "";
       let usedTokens = 0;
       let finishReason: string | undefined;
       let nativeFinishReason: string | undefined;
@@ -170,6 +172,7 @@ export async function POST(req: Request) {
                 if (ev.text) {
                   if (firstTokenMs === null) firstTokenMs = Date.now() - t0;
                   answerChars += ev.text.length;
+                  answerText += ev.text;
                   send(ev.text);
                 }
                 if (ev.finishReason) finishReason = ev.finishReason;
@@ -221,8 +224,12 @@ export async function POST(req: Request) {
         }
 
         after(async () => {
-          if (answerChars) await addTokens(user.email, tokens).catch((e) => chatLog.error("chat_usage_error", { requestId, attendee }, e));
-          else await releaseQuery(user.email).catch(() => {});
+          if (answerChars) {
+            await addTokens(user.email, tokens).catch((e) => chatLog.error("chat_usage_error", { requestId, attendee }, e));
+            await appendTurn(user.email, { role: "user", content: last.content }, { role: "assistant", content: answerText }).catch((e) =>
+              chatLog.error("chat_history_error", { requestId, attendee }, e)
+            );
+          } else await releaseQuery(user.email).catch(() => {});
         });
 
         try {
