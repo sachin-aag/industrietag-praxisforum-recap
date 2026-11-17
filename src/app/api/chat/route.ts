@@ -77,36 +77,56 @@ export async function POST(req: Request) {
   let buffer = "";
   let answerChars = 0;
   let usedTokens = 0;
+  let finishReason: string | undefined;
   const stream = new ReadableStream({
     async start(controller) {
       const reader = upstream.body!.getReader();
+
+      const consumeLine = (line: string) => {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) return;
+        const payload = trimmed.slice(5).trim();
+        if (!payload || payload === "[DONE]") return;
+        try {
+          const json = JSON.parse(payload) as {
+            choices?: { delta?: { content?: string }; finish_reason?: string | null }[];
+            usage?: { total_tokens?: number };
+          };
+          const choice = json.choices?.[0];
+          const delta = choice?.delta?.content;
+          if (delta) {
+            answerChars += delta.length;
+            controller.enqueue(encoder.encode(delta));
+          }
+          if (choice?.finish_reason) finishReason = choice.finish_reason;
+          if (json.usage?.total_tokens) usedTokens = json.usage.total_tokens;
+        } catch {
+          /* keep-alive comments or partial lines */
+        }
+      };
+
       try {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
+          if (value) buffer += decoder.decode(value, { stream: !done });
           const lines = buffer.split("\n");
-          buffer = lines.pop() ?? "";
-          for (const line of lines) {
-            if (!line.startsWith("data:")) continue;
-            const payload = line.slice(5).trim();
-            if (payload === "[DONE]") continue;
-            try {
-              const json = JSON.parse(payload);
-              const delta = json.choices?.[0]?.delta?.content;
-              if (delta) {
-                answerChars += delta.length;
-                controller.enqueue(encoder.encode(delta));
-              }
-              if (json.usage?.total_tokens) usedTokens = json.usage.total_tokens;
-            } catch {
-              /* keep-alive comments or partial lines */
-            }
+          if (done) {
+            // Last chunk often ends without a trailing newline; dropping `buffer` here cut answers off mid-sentence.
+            buffer = "";
+            for (const line of lines) consumeLine(line);
+            break;
           }
+          buffer = lines.pop() ?? "";
+          for (const line of lines) consumeLine(line);
         }
       } catch (err) {
         console.error("[chat] stream", err);
       } finally {
+        if (finishReason === "length") {
+          console.error("[chat] truncated", { finishReason, answerChars });
+        } else if (finishReason && finishReason !== "stop") {
+          console.warn("[chat] finish", { finishReason, answerChars });
+        }
         // Record usage before the client sees the end of the stream, so a quick follow-up can't slip past the cap.
         // Real token counts come from OpenRouter; the estimate (~3.5 chars per token) is only a fallback.
         const tokens = usedTokens || Math.ceil((promptChars + answerChars) / 3.5);
