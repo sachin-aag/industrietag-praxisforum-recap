@@ -21,7 +21,7 @@ export async function createLoginToken(email: string, lang: string) {
 export async function verifyLoginToken(token: string) {
   const { payload } = await jwtVerify(token, env.authSecret(), { algorithms: ["HS256"] });
   if (payload.purpose !== "login" || typeof payload.email !== "string") throw new Error("bad token");
-  return { email: payload.email, lang: payload.lang === "en" ? "en" : "de" };
+  return { email: normalizeEmail(payload.email), lang: payload.lang === "en" ? "en" : "de" };
 }
 
 export async function createSession(email: string) {
@@ -48,8 +48,9 @@ export async function currentUser(): Promise<{ email: string } | null> {
   try {
     const { payload } = await jwtVerify(token, env.authSecret(), { algorithms: ["HS256"] });
     if (payload.purpose !== "session" || typeof payload.email !== "string") return null;
-    if (!(await isAllowed(payload.email))) return null;
-    return { email: payload.email };
+    const email = normalizeEmail(payload.email);
+    if (!(await isAllowed(email))) return null;
+    return { email };
   } catch {
     return null;
   }

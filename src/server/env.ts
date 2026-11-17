@@ -1,4 +1,5 @@
 import "server-only";
+import { normalizeEmail } from "./email";
 
 function req(name: string): string {
   const v = process.env[name];
@@ -21,7 +22,7 @@ export const env = {
     new Set(
       (process.env.ALLOWED_EMAILS ?? "")
         .split(/[,\n;]/)
-        .map((e) => e.trim().replace(/^<|>$/g, "").toLowerCase())
+        .map((e) => normalizeEmail(e))
         .filter(Boolean)
     ),
 };
