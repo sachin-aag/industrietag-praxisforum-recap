@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import { splitMarkdownBlocks } from "@/lib/assistant-markdown";
+import { normalizeEmail } from "@/lib/normalize-email";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Phase = "loading" | "anon" | "sent" | "denied" | "chat";
@@ -20,7 +21,7 @@ const T = {
     send: "Login-Link senden",
     sending: "Wird gesendet …",
     sentTitle: "Prüfen Sie Ihr Postfach",
-    sentBody: (e: string) => `Wenn ${e} als Teilnehmende registriert ist, ist ein Login-Link unterwegs. Er ist 20 Minuten gültig.`,
+    sentBody: (e: string) => `Wir haben einen Login-Link an ${e} gesendet. Er ist 20 Minuten gültig.`,
     again: "Andere Adresse verwenden",
     expired: "Der Login-Link ist abgelaufen oder ungültig. Fordern Sie einfach einen neuen an.",
     errSend: "Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
@@ -53,7 +54,7 @@ const T = {
     send: "Send sign-in link",
     sending: "Sending …",
     sentTitle: "Check your inbox",
-    sentBody: (e: string) => `If ${e} is registered as an attendee, a sign-in link is on its way. It is valid for 20 minutes.`,
+    sentBody: (e: string) => `We sent a sign-in link to ${e}. It is valid for 20 minutes.`,
     again: "Use a different address",
     expired: "The sign-in link has expired or is invalid. Just request a new one.",
     errSend: "The email could not be sent. Please try again later.",
@@ -187,20 +188,28 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   async function requestLink(e: React.FormEvent) {
     e.preventDefault();
     setNotice(null);
+    const normalized = normalizeEmail(email);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+      setNotice(t.errInvalid);
+      return;
+    }
     setBusy(true);
     try {
       const r = await fetch("/api/auth/request/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, lang }),
+        credentials: "same-origin",
+        cache: "no-store",
+        body: JSON.stringify({ email: normalized, lang }),
       });
-      if (r.ok) {
-        setPhase("sent");
+      const body = (await r.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (body.error === "not_allowed" || r.status === 403) {
+        setPhase("denied");
         return;
       }
-      const body = (await r.json().catch(() => ({}))) as { error?: string };
-      if (r.status === 403 && body.error === "not_allowed") {
-        setPhase("denied");
+      if (r.ok && body.ok) {
+        setEmail(normalized);
+        setPhase("sent");
         return;
       }
       setNotice(r.status === 429 ? t.errRate : r.status === 400 ? t.errInvalid : t.errSend);
