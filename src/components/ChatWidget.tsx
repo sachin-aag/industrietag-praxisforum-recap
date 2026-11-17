@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import { splitMarkdownBlocks } from "@/lib/assistant-markdown";
+import { splitChatStream } from "@/lib/chat-stream";
 import { normalizeEmail } from "@/lib/normalize-email";
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; incomplete?: boolean };
 type Phase = "loading" | "anon" | "sent" | "denied" | "chat";
 
 const ACCESS_CONTACT = "sachin@gamechangerz.io";
@@ -39,6 +40,7 @@ const T = {
     errChatRate: "Sie haben viele Fragen gestellt. Bitte versuchen Sie es in einer Weile erneut.",
     errQuota: "Sie haben Ihr Kontingent an Fragen aufgebraucht. Vielen Dank fürs Nutzen des Assistenten!",
     errUnavailable: "Der Assistent ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    incomplete: "Die Antwort wurde unterbrochen. Bitte senden Sie die Frage erneut.",
     left: (n: number) => (n === 1 ? "Noch 1 Frage" : `Noch ${n} Fragen`),
     signedIn: "Angemeldet als",
     logout: "Abmelden",
@@ -72,6 +74,7 @@ const T = {
     errChatRate: "You've asked a lot of questions. Please try again in a while.",
     errQuota: "You've used up your question allowance. Thanks for using the assistant!",
     errUnavailable: "The assistant is unavailable right now. Please try again later.",
+    incomplete: "The answer was cut off. Please send the question again.",
     left: (n: number) => (n === 1 ? "1 question left" : `${n} questions left`),
     signedIn: "Signed in as",
     logout: "Sign out",
@@ -231,6 +234,8 @@ export function ChatWidget({ lang }: { lang: Locale }) {
       const r = await fetch("/api/chat/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        cache: "no-store",
         body: JSON.stringify({ messages: next, lang }),
       });
       if (r.status === 401) {
@@ -250,11 +255,17 @@ export function ChatWidget({ lang }: { lang: Locale }) {
       let acc = "";
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
-        acc += dec.decode(value, { stream: true });
-        setMessages([...next, { role: "assistant", content: acc }]);
+        if (value) acc += dec.decode(value, { stream: true });
+        if (done) {
+          acc += dec.decode();
+          break;
+        }
+        setMessages([...next, { role: "assistant", content: splitChatStream(acc).text }]);
       }
-      if (!acc.trim()) throw new Error("empty");
+      const { text, meta } = splitChatStream(acc);
+      if (!text.trim()) throw new Error("empty");
+      const incomplete = !meta || meta.finishReason === "length";
+      setMessages([...next, { role: "assistant", content: text, incomplete }]);
     } catch (err) {
       const code = err instanceof Error ? err.message : "";
       const text = code === "quota" ? t.errQuota : code === "429" ? t.errChatRate : code === "503" ? t.errUnavailable : t.errChat;
@@ -357,7 +368,18 @@ export function ChatWidget({ lang }: { lang: Locale }) {
                 ) : (
                   messages.map((m, i) => (
                     <div key={i} className={`chat-msg is-${m.role}`}>
-                      {m.role === "assistant" ? (m.content ? <Rich text={m.content} /> : <p className="chat-typing">{t.thinking}</p>) : <p>{m.content}</p>}
+                      {m.role === "assistant" ? (
+                        m.content ? (
+                          <>
+                            <Rich text={m.content} />
+                            {m.incomplete ? <p className="chat-incomplete">{t.incomplete}</p> : null}
+                          </>
+                        ) : (
+                          <p className="chat-typing">{t.thinking}</p>
+                        )
+                      ) : (
+                        <p>{m.content}</p>
+                      )}
                     </div>
                   ))
                 )}
