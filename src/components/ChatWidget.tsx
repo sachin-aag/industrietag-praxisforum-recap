@@ -4,7 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/i18n/config";
 
 type Msg = { role: "user" | "assistant"; content: string };
-type Phase = "loading" | "anon" | "sent" | "chat";
+type Phase = "loading" | "anon" | "sent" | "denied" | "chat";
+
+const ACCESS_CONTACT = "sachin@gamechangerz.io";
 
 const T = {
   de: {
@@ -23,6 +25,9 @@ const T = {
     errSend: "Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
     errRate: "Zu viele Versuche. Bitte warten Sie einige Minuten.",
     errInvalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    deniedTitle: "Kein Zugang für diese E-Mail",
+    deniedBody:
+      "Diese E-Mail-Adresse ist nicht für den Assistenten freigeschaltet. Wenn Sie am Praxisforum teilgenommen haben, schreiben Sie bitte an",
     hello: "Fragen Sie mich zu Vorträgen, Referierenden und Inhalten des Praxisforums vom 10. November 2026.",
     suggestions: ["Was waren die wichtigsten Erkenntnisse des Tages?", "Was hat Hilti zum Bohrroboter gezeigt?", "In welchen Vorträgen ging es um Energiedaten?"],
     placeholder: "Ihre Frage zum Event …",
@@ -53,6 +58,9 @@ const T = {
     errSend: "The email could not be sent. Please try again later.",
     errRate: "Too many attempts. Please wait a few minutes.",
     errInvalid: "Please enter a valid email address.",
+    deniedTitle: "No access for this email",
+    deniedBody:
+      "This email address is not authorised for the assistant. If you attended the Praxisforum, you can write to",
     hello: "Ask me about the talks, speakers and content of the Praxisforum on 10 November 2026.",
     suggestions: ["What were the key takeaways of the day?", "What did Hilti show about the drilling robot?", "Which talks covered energy data?"],
     placeholder: "Your question about the event …",
@@ -183,8 +191,16 @@ export function ChatWidget({ lang }: { lang: Locale }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, lang }),
       });
-      if (r.ok) setPhase("sent");
-      else setNotice(r.status === 429 ? t.errRate : r.status === 400 ? t.errInvalid : t.errSend);
+      if (r.ok) {
+        setPhase("sent");
+        return;
+      }
+      const body = (await r.json().catch(() => ({}))) as { error?: string };
+      if (r.status === 403 && body.error === "not_allowed") {
+        setPhase("denied");
+        return;
+      }
+      setNotice(r.status === 429 ? t.errRate : r.status === 400 ? t.errInvalid : t.errSend);
     } catch {
       setNotice(t.errSend);
     } finally {
@@ -290,6 +306,20 @@ export function ChatWidget({ lang }: { lang: Locale }) {
             <div className="chat-body chat-login">
               <h3>{t.sentTitle}</h3>
               <p>{t.sentBody(email)}</p>
+              <button type="button" className="chat-link" onClick={() => setPhase("anon")}>
+                {t.again}
+              </button>
+            </div>
+          ) : null}
+
+          {phase === "denied" ? (
+            <div className="chat-body chat-login">
+              <p className="chat-notice" role="alert">
+                <strong>{t.deniedTitle}</strong>
+                <br />
+                {t.deniedBody}{" "}
+                <a href={`mailto:${ACCESS_CONTACT}`}>{ACCESS_CONTACT}</a>.
+              </p>
               <button type="button" className="chat-link" onClick={() => setPhase("anon")}>
                 {t.again}
               </button>
