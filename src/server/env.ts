@@ -16,6 +16,31 @@ export const env = {
   openrouterKey: () => req("OPENROUTER_API_KEY"),
   /** OpenRouter model slug. Override with OPENROUTER_MODEL (e.g. in Vercel env). */
   model: () => process.env.OPENROUTER_MODEL || "google/gemini-3.6-flash",
+  /**
+   * Combined cap for hidden reasoning + visible answer. Gemini 3.x thinking
+   * counts against this; 900 was not enough and cut replies mid-sentence.
+   */
+  maxOutputTokens: () => {
+    const n = Number(process.env.OPENROUTER_MAX_TOKENS);
+    return Number.isFinite(n) && n >= 256 ? Math.min(Math.floor(n), 16384) : 10_000;
+  },
+  /**
+   * Gemini 3.x defaults to medium thinking. Low is enough for grounded recap Q&A
+   * and leaves room under maxOutputTokens for the actual answer.
+   */
+  reasoningEffort: (): "minimal" | "low" | "medium" | "high" | "none" => {
+    const v = process.env.OPENROUTER_REASONING_EFFORT;
+    switch (v) {
+      case "minimal":
+      case "low":
+      case "medium":
+      case "high":
+      case "none":
+        return v;
+      default:
+        return "low";
+    }
+  },
   /** Public origin used in magic links, e.g. https://recap.example.de (falls back to the request origin). */
   siteUrl: () => process.env.SITE_URL?.replace(/\/$/, ""),
   /** Comma- or newline-separated list of registered attendees. Kept out of the (public) repo. */

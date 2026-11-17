@@ -15,15 +15,20 @@ export const maxDuration = 60;
 type Msg = { role: "user" | "assistant"; content: string };
 type LlmOutcome = "stream_error" | "upstream_error" | "truncated_max_tokens" | "empty_answer" | "unusual_finish" | "ok";
 
+function truncatedByLength(finishReason?: string, nativeFinishReason?: string) {
+  return finishReason === "length" || nativeFinishReason === "MAX_TOKENS" || nativeFinishReason === "max_tokens";
+}
+
 function llmOutcome(args: {
   streamError: unknown;
   upstreamError?: string;
   finishReason?: string;
+  nativeFinishReason?: string;
   answerChars: number;
 }): LlmOutcome {
   if (args.streamError) return "stream_error";
   if (args.upstreamError) return "upstream_error";
-  if (args.finishReason === "length") return "truncated_max_tokens";
+  if (truncatedByLength(args.finishReason, args.nativeFinishReason)) return "truncated_max_tokens";
   if (!args.answerChars) return "empty_answer";
   if (args.finishReason && args.finishReason !== "stop") return "unusual_finish";
   return "ok";
@@ -80,6 +85,8 @@ export async function POST(req: Request) {
   if (!reserved) return new Response("quota_exhausted", { status: 429, headers: { "X-Quota": "exhausted" } });
 
   const model = env.model();
+  const maxOutputTokens = env.maxOutputTokens();
+  const reasoningEffort = env.reasoningEffort();
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
@@ -97,6 +104,8 @@ export async function POST(req: Request) {
       let streamMs = 0;
       let answerChars = 0;
       let usedTokens = 0;
+      let completionTokens = 0;
+      let reasoningTokens = 0;
       let finishReason: string | undefined;
       let nativeFinishReason: string | undefined;
       let streamError: unknown;
@@ -118,7 +127,9 @@ export async function POST(req: Request) {
             stream: true,
             usage: { include: true },
             temperature: 0.2,
-            max_tokens: 900,
+            // Gemini 3.x thinking tokens share this cap with the visible answer.
+            max_tokens: maxOutputTokens,
+            reasoning: { effort: reasoningEffort },
             messages: [
               { role: "system", content: systemPrompt(lang) },
               ...messages.slice(0, -1),
@@ -175,6 +186,8 @@ export async function POST(req: Request) {
                 if (ev.finishReason) finishReason = ev.finishReason;
                 if (ev.nativeFinishReason) nativeFinishReason = ev.nativeFinishReason;
                 if (ev.totalTokens) usedTokens = ev.totalTokens;
+                if (ev.completionTokens) completionTokens = ev.completionTokens;
+                if (ev.reasoningTokens) reasoningTokens = ev.reasoningTokens;
               }
               if (done) break;
             }
@@ -188,7 +201,7 @@ export async function POST(req: Request) {
         chatLog.error("chat_llm_stream_error", { requestId, attendee, model, lang, answerChars }, err);
       } finally {
         const tokens = usedTokens || Math.ceil((promptChars + answerChars) / 3.5);
-        const outcome = llmOutcome({ streamError, upstreamError, finishReason, answerChars });
+        const outcome = llmOutcome({ streamError, upstreamError, finishReason, nativeFinishReason, answerChars });
         const summary = {
           requestId,
           attendee,
@@ -198,10 +211,14 @@ export async function POST(req: Request) {
           outcome,
           finishReason,
           nativeFinishReason,
+          maxOutputTokens,
+          reasoningEffort,
           upstreamError,
           sseParseErrors,
           answerChars,
           tokens,
+          completionTokens: completionTokens || undefined,
+          reasoningTokens: reasoningTokens || undefined,
           tokensReported: usedTokens > 0,
           passageChars: passages.length,
           questionChars: last.content.length,
@@ -217,7 +234,14 @@ export async function POST(req: Request) {
         logLlmDone(outcome, summary);
 
         if (answerChars) {
-          send(encodeChatMeta({ done: true, finishReason: finishReason ?? null, chars: answerChars, requestId }));
+          send(
+            encodeChatMeta({
+              done: true,
+              finishReason: truncatedByLength(finishReason, nativeFinishReason) ? "length" : (finishReason ?? null),
+              chars: answerChars,
+              requestId,
+            }),
+          );
         }
 
         after(async () => {

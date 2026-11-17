@@ -5,6 +5,8 @@ export type OpenRouterDelta = {
   finishReason?: string;
   nativeFinishReason?: string;
   totalTokens?: number;
+  completionTokens?: number;
+  reasoningTokens?: number;
   error?: string;
 };
 
@@ -67,18 +69,29 @@ export class OpenRouterSseParser {
       const err = errorMessage(json);
       if (err) return { text: "", error: err };
       if (!json || typeof json !== "object") return null;
-      const obj = json as { choices?: Choice[]; usage?: { total_tokens?: number } };
+      const obj = json as {
+        choices?: Choice[];
+        usage?: {
+          total_tokens?: number;
+          completion_tokens?: number;
+          completion_tokens_details?: { reasoning_tokens?: number };
+        };
+      };
       const choice = obj.choices?.[0];
       const text = contentToString(choice?.delta?.content);
       const finishReason = choice?.finish_reason ?? undefined;
       const nativeFinishReason = choice?.native_finish_reason ?? undefined;
       const totalTokens = obj.usage?.total_tokens;
-      if (!text && !finishReason && !totalTokens) return null;
+      const completionTokens = obj.usage?.completion_tokens;
+      const reasoningTokens = obj.usage?.completion_tokens_details?.reasoning_tokens;
+      if (!text && !finishReason && totalTokens == null && reasoningTokens == null) return null;
       return {
         text,
         ...(finishReason ? { finishReason } : {}),
         ...(nativeFinishReason ? { nativeFinishReason } : {}),
         ...(typeof totalTokens === "number" ? { totalTokens } : {}),
+        ...(typeof completionTokens === "number" ? { completionTokens } : {}),
+        ...(typeof reasoningTokens === "number" ? { reasoningTokens } : {}),
       };
     } catch {
       this.parseErrors += 1;
