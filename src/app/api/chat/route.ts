@@ -1,21 +1,62 @@
-import { currentUser, touchSession } from "@/server/auth";
+import { after } from "next/server";
+import { currentUser } from "@/server/auth";
 import { chatLog, hashAttendee, newChatRequestId } from "@/server/chat-log";
 import { env } from "@/server/env";
 import { retrieve, systemPrompt } from "@/server/knowledge";
+import { OpenRouterSseParser } from "@/server/openrouter-sse";
 import { hit } from "@/server/ratelimit";
 import { UsageStoreMissing, addTokens, releaseQuery, reserveQuery } from "@/server/usage";
+import { encodeChatMeta } from "@/lib/chat-stream";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 type Msg = { role: "user" | "assistant"; content: string };
+type LlmOutcome = "stream_error" | "upstream_error" | "truncated_max_tokens" | "empty_answer" | "unusual_finish" | "ok";
+
+function llmOutcome(args: {
+  streamError: unknown;
+  upstreamError?: string;
+  finishReason?: string;
+  answerChars: number;
+}): LlmOutcome {
+  if (args.streamError) return "stream_error";
+  if (args.upstreamError) return "upstream_error";
+  if (args.finishReason === "length") return "truncated_max_tokens";
+  if (!args.answerChars) return "empty_answer";
+  if (args.finishReason && args.finishReason !== "stop") return "unusual_finish";
+  return "ok";
+}
+
+function logLlmDone(outcome: LlmOutcome, summary: Record<string, unknown>) {
+  switch (outcome) {
+    case "ok":
+      chatLog.info("chat_llm_done", summary);
+      return;
+    case "empty_answer":
+    case "unusual_finish":
+      chatLog.warn("chat_llm_done", summary);
+      return;
+    case "stream_error":
+    case "upstream_error":
+    case "truncated_max_tokens":
+      chatLog.error("chat_llm_done", summary);
+      return;
+    default: {
+      const _: never = outcome;
+      return _;
+    }
+  }
+}
 
 export async function POST(req: Request) {
   const requestId = newChatRequestId();
   const t0 = Date.now();
   const user = await currentUser();
   if (!user) return new Response("unauthorized", { status: 401 });
-  await touchSession(user.email);
+  // Do not cookies().set() here: mutating cookies on a streaming route can buffer/cut off the body on Vercel.
+  // Sliding expiry is refreshed by GET /api/auth/me when the widget opens.
   if (!hit(`chat:${user.email}`, 40, 60 * 60_000)) return new Response("rate_limited", { status: 429 });
   const attendee = hashAttendee(user.email);
 
@@ -38,140 +79,127 @@ export async function POST(req: Request) {
   }
   if (!reserved) return new Response("quota_exhausted", { status: 429, headers: { "X-Quota": "exhausted" } });
 
-  // Retrieval query: the question plus the previous user turn, so follow-ups ("und was sagte sie dazu?") still match.
-  const prevUser = messages.slice(0, -1).reverse().find((m) => m.role === "user")?.content ?? "";
-  const tRetrieve = Date.now();
-  const passages = retrieve(`${last.content} ${prevUser}`);
-  const retrievalMs = Date.now() - tRetrieve;
-  const retrievalSlugs = [...passages.matchAll(/\[([a-z0-9-]+)\]>>/g)].map((m) => m[1]);
-  if (process.env.DEBUG_RETRIEVAL) chatLog.info("chat_retrieval_debug", { requestId, attendee, retrievalSlugs });
-
   const model = env.model();
-  const tUpstream = Date.now();
-  const upstream = await fetch(`${process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1"}/chat/completions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.openrouterKey()}`,
-      "Content-Type": "application/json",
-      "X-Title": "Praxisforum 2026 Assistent",
-      ...(env.siteUrl() ? { "HTTP-Referer": env.siteUrl()! } : {}),
-    },
-    body: JSON.stringify({
-      model,
-      stream: true,
-      usage: { include: true },
-      temperature: 0.2,
-      max_tokens: 900,
-      messages: [
-        { role: "system", content: systemPrompt(lang) },
-        ...messages.slice(0, -1),
-        {
-          role: "user",
-          content: `${passages ? `RELEVANTE MITSCHNITT-AUSZÜGE (nur als Quelle, nicht wörtlich zitieren):\n${passages}\n\n` : ""}FRAGE: ${last.content}`,
-        },
-      ],
-    }),
-  });
-
-  const upstreamConnectMs = Date.now() - tUpstream;
-  if (!upstream.ok || !upstream.body) {
-    const bodyText = await upstream.text().catch(() => "");
-    let upstreamMessage: string | undefined;
-    try {
-      const j = JSON.parse(bodyText) as { error?: { message?: string; code?: number } };
-      upstreamMessage = j.error?.message;
-    } catch {
-      /* non-JSON body */
-    }
-    chatLog.error("chat_llm_upstream_error", {
-      requestId,
-      attendee,
-      model,
-      lang,
-      status: upstream.status,
-      upstreamMessage,
-      bodyPreview: bodyText.slice(0, 400),
-      ms: { total: Date.now() - t0, retrieval: retrievalMs, upstreamConnect: upstreamConnectMs },
-      passageChars: passages.length,
-      questionChars: last.content.length,
-    });
-    await releaseQuery(user.email).catch(() => {});
-    return new Response("upstream_error", { status: 502 });
-  }
-
-  const promptChars = JSON.stringify(messages).length + passages.length + 45000; // fallback estimate only
-
-  // Convert OpenRouter's SSE stream into a plain text stream for the widget.
-  const decoder = new TextDecoder();
   const encoder = new TextEncoder();
-  let buffer = "";
-  let answerChars = 0;
-  let usedTokens = 0;
-  let finishReason: string | undefined;
-  let streamError: unknown;
-  let firstTokenMs: number | null = null;
   const stream = new ReadableStream({
     async start(controller) {
-      const reader = upstream.body!.getReader();
-      const tStream = Date.now();
+      const send = (chunk: string) => controller.enqueue(encoder.encode(chunk));
+      const tRetrieve = Date.now();
+      const prevUser = messages.slice(0, -1).reverse().find((m) => m.role === "user")?.content ?? "";
+      const passages = retrieve(`${last.content} ${prevUser}`);
+      const retrievalMs = Date.now() - tRetrieve;
+      const retrievalSlugs = [...passages.matchAll(/\[([a-z0-9-]+)\]>>/g)].map((m) => m[1]);
+      if (process.env.DEBUG_RETRIEVAL) chatLog.info("chat_retrieval_debug", { requestId, attendee, retrievalSlugs });
 
-      const consumeLine = (line: string) => {
-        const trimmed = line.trim();
-        if (!trimmed.startsWith("data:")) return;
-        const payload = trimmed.slice(5).trim();
-        if (!payload || payload === "[DONE]") return;
-        try {
-          const json = JSON.parse(payload) as {
-            choices?: { delta?: { content?: string }; finish_reason?: string | null }[];
-            usage?: { total_tokens?: number };
-          };
-          const choice = json.choices?.[0];
-          const delta = choice?.delta?.content;
-          if (delta) {
-            if (firstTokenMs === null) firstTokenMs = Date.now() - t0;
-            answerChars += delta.length;
-            controller.enqueue(encoder.encode(delta));
-          }
-          if (choice?.finish_reason) finishReason = choice.finish_reason;
-          if (json.usage?.total_tokens) usedTokens = json.usage.total_tokens;
-        } catch {
-          /* keep-alive comments or partial lines */
-        }
-      };
+      const promptChars = JSON.stringify(messages).length + passages.length + 45000;
+      const tUpstream = Date.now();
+      let upstreamConnectMs = 0;
+      let streamMs = 0;
+      let answerChars = 0;
+      let usedTokens = 0;
+      let finishReason: string | undefined;
+      let nativeFinishReason: string | undefined;
+      let streamError: unknown;
+      let firstTokenMs: number | null = null;
+      let sseParseErrors = 0;
+      let upstreamError: string | undefined;
 
       try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (value) buffer += decoder.decode(value, { stream: !done });
-          const lines = buffer.split("\n");
-          if (done) {
-            // Last chunk often ends without a trailing newline; dropping `buffer` here cut answers off mid-sentence.
-            buffer = "";
-            for (const line of lines) consumeLine(line);
-            break;
+        const upstream = await fetch(`${process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1"}/chat/completions`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${env.openrouterKey()}`,
+            "Content-Type": "application/json",
+            "X-Title": "Praxisforum 2026 Assistent",
+            ...(env.siteUrl() ? { "HTTP-Referer": env.siteUrl()! } : {}),
+          },
+          body: JSON.stringify({
+            model,
+            stream: true,
+            usage: { include: true },
+            temperature: 0.2,
+            max_tokens: 900,
+            messages: [
+              { role: "system", content: systemPrompt(lang) },
+              ...messages.slice(0, -1),
+              {
+                role: "user",
+                content: `${passages ? `RELEVANTE MITSCHNITT-AUSZÜGE (nur als Quelle, nicht wörtlich zitieren):\n${passages}\n\n` : ""}FRAGE: ${last.content}`,
+              },
+            ],
+          }),
+        });
+        upstreamConnectMs = Date.now() - tUpstream;
+
+        if (!upstream.ok || !upstream.body) {
+          const bodyText = await upstream.text().catch(() => "");
+          try {
+            const j = JSON.parse(bodyText) as { error?: { message?: string } };
+            upstreamError = j.error?.message;
+          } catch {
+            upstreamError = bodyText.slice(0, 200) || `HTTP ${upstream.status}`;
           }
-          buffer = lines.pop() ?? "";
-          for (const line of lines) consumeLine(line);
+          chatLog.error("chat_llm_upstream_error", {
+            requestId,
+            attendee,
+            model,
+            lang,
+            status: upstream.status,
+            upstreamMessage: upstreamError,
+            bodyPreview: bodyText.slice(0, 400),
+            ms: { total: Date.now() - t0, retrieval: retrievalMs, upstreamConnect: upstreamConnectMs },
+            passageChars: passages.length,
+            questionChars: last.content.length,
+          });
+        } else {
+          const decoder = new TextDecoder();
+          const parser = new OpenRouterSseParser();
+          const reader = upstream.body.getReader();
+          const tStream = Date.now();
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              const piece = value ? decoder.decode(value, { stream: !done }) : "";
+              const events = parser.push(piece, done);
+              for (const ev of events) {
+                if (ev.error) {
+                  upstreamError = ev.error;
+                  chatLog.error("chat_llm_sse_error", { requestId, attendee, model, message: ev.error, answerChars });
+                  continue;
+                }
+                if (ev.text) {
+                  if (firstTokenMs === null) firstTokenMs = Date.now() - t0;
+                  answerChars += ev.text.length;
+                  send(ev.text);
+                }
+                if (ev.finishReason) finishReason = ev.finishReason;
+                if (ev.nativeFinishReason) nativeFinishReason = ev.nativeFinishReason;
+                if (ev.totalTokens) usedTokens = ev.totalTokens;
+              }
+              if (done) break;
+            }
+          } finally {
+            streamMs = Date.now() - tStream;
+            sseParseErrors = parser.parseErrors;
+          }
         }
       } catch (err) {
         streamError = err;
         chatLog.error("chat_llm_stream_error", { requestId, attendee, model, lang, answerChars }, err);
       } finally {
-        const streamMs = Date.now() - tStream;
-        const totalMs = Date.now() - t0;
-        // Record usage before the client sees the end of the stream, so a quick follow-up can't slip past the cap.
-        // Real token counts come from OpenRouter; the estimate (~3.5 chars per token) is only a fallback.
         const tokens = usedTokens || Math.ceil((promptChars + answerChars) / 3.5);
-        await addTokens(user.email, tokens).catch((e) => chatLog.error("chat_usage_error", { requestId, attendee }, e));
-
-        const ok = !streamError && answerChars > 0 && finishReason !== "length";
+        const outcome = llmOutcome({ streamError, upstreamError, finishReason, answerChars });
         const summary = {
           requestId,
           attendee,
           model,
           lang,
-          ok,
+          ok: outcome === "ok",
+          outcome,
           finishReason,
+          nativeFinishReason,
+          upstreamError,
+          sseParseErrors,
           answerChars,
           tokens,
           tokensReported: usedTokens > 0,
@@ -179,28 +207,29 @@ export async function POST(req: Request) {
           questionChars: last.content.length,
           historyTurns: messages.length,
           ms: {
-            total: totalMs,
+            total: Date.now() - t0,
             retrieval: retrievalMs,
             upstreamConnect: upstreamConnectMs,
             firstToken: firstTokenMs,
             stream: streamMs,
           },
         };
+        logLlmDone(outcome, summary);
 
-        if (streamError) {
-          chatLog.error("chat_llm_done", { ...summary, outcome: "stream_error" });
-        } else if (finishReason === "length") {
-          chatLog.error("chat_llm_done", { ...summary, outcome: "truncated_max_tokens" });
-        } else if (!answerChars) {
-          chatLog.warn("chat_llm_done", { ...summary, outcome: "empty_answer" });
-        } else if (finishReason && finishReason !== "stop") {
-          chatLog.warn("chat_llm_done", { ...summary, outcome: "unusual_finish" });
-        } else {
-          chatLog.info("chat_llm_done", { ...summary, outcome: "ok" });
+        if (answerChars) {
+          send(encodeChatMeta({ done: true, finishReason: finishReason ?? null, chars: answerChars, requestId }));
         }
 
-        if (!answerChars) await releaseQuery(user.email).catch(() => {});
-        controller.close();
+        after(async () => {
+          if (answerChars) await addTokens(user.email, tokens).catch((e) => chatLog.error("chat_usage_error", { requestId, attendee }, e));
+          else await releaseQuery(user.email).catch(() => {});
+        });
+
+        try {
+          controller.close();
+        } catch {
+          /* already closed */
+        }
       }
     },
   });
@@ -208,7 +237,9 @@ export async function POST(req: Request) {
   return new Response(stream, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-store",
+      "Cache-Control": "no-cache, no-transform, no-store",
+      "X-Accel-Buffering": "no",
+      "X-Content-Type-Options": "nosniff",
       "X-Questions-Left": String(Math.max(0, reserved.maxQueries - reserved.queries)),
       "X-Request-Id": requestId,
     },
