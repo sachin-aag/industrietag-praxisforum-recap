@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/i18n/config";
+import { ThinkingStatus } from "@/components/ThinkingStatus";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Phase = "loading" | "anon" | "sent" | "chat";
@@ -158,7 +159,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem("pf-chat", JSON.stringify(messages.slice(-20)));
+      sessionStorage.setItem("pf-chat", JSON.stringify(messages.filter((m) => m.content.trim()).slice(-20)));
     } catch {
       /* storage unavailable */
     }
@@ -315,7 +316,15 @@ export function ChatWidget({ lang }: { lang: Locale }) {
                 ) : (
                   messages.map((m, i) => (
                     <div key={i} className={`chat-msg is-${m.role}`}>
-                      {m.role === "assistant" ? (m.content ? <Rich text={m.content} /> : <p className="chat-typing">{t.thinking}</p>) : <p>{m.content}</p>}
+                      {m.role === "assistant" ? (
+                        m.content ? (
+                          <Rich text={m.content} />
+                        ) : (
+                          <ThinkingStatus lang={lang} fallback={t.thinking} />
+                        )
+                      ) : (
+                        <p>{m.content}</p>
+                      )}
                     </div>
                   ))
                 )}
