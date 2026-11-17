@@ -10,20 +10,21 @@ export const limits = {
 export type Usage = { queries: number; tokens: number; maxQueries: number; maxTokens: number };
 
 import { redis, UsageStoreMissing } from "./redis";
+import { normalizeEmail } from "./email";
 
 export { UsageStoreMissing };
 
 const keys = (email: string) => ({ q: `pf:usage:${email}:queries`, t: `pf:usage:${email}:tokens` });
 
 export async function getUsage(email: string): Promise<Usage> {
-  const k = keys(email);
+  const k = keys(normalizeEmail(email));
   const [q, t] = await redis([["GET", k.q], ["GET", k.t]]);
   return { queries: Number(q ?? 0), tokens: Number(t ?? 0), maxQueries: limits.queries(), maxTokens: limits.tokens() };
 }
 
 /** Atomically reserves one question. Returns null if a limit is already reached. */
 export async function reserveQuery(email: string): Promise<Usage | null> {
-  const k = keys(email);
+  const k = keys(normalizeEmail(email));
   const [t] = await redis([["GET", k.t]]);
   if (Number(t ?? 0) >= limits.tokens()) return null;
   const [q] = await redis([["INCR", k.q]]);
@@ -36,9 +37,10 @@ export async function reserveQuery(email: string): Promise<Usage | null> {
 
 /** Gives the question back if the model call failed before answering. */
 export async function releaseQuery(email: string) {
-  await redis([["DECR", keys(email).q]]);
+  await redis([["DECR", keys(normalizeEmail(email)).q]]);
 }
 
 export async function addTokens(email: string, n: number) {
-  if (n > 0) await redis([["INCRBY", keys(email).t, Math.round(n)]]);
+  const e = normalizeEmail(email);
+  if (n > 0) await redis([["INCRBY", keys(e).t, Math.round(n)]]);
 }

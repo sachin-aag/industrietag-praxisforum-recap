@@ -7,8 +7,22 @@ import { isAllowed, normalizeEmail } from "./allowlist";
 export { isAllowed, normalizeEmail };
 
 export const SESSION_COOKIE = "pf_session";
-const SESSION_DAYS = 30;
 const LINK_MINUTES = 20;
+
+/** Attendee session length after magic-link sign-in (default 6 hours). */
+export function sessionHours(): number {
+  const n = Number(process.env.AUTH_SESSION_HOURS);
+  return Number.isFinite(n) && n > 0 ? Math.min(n, 24 * 30) : 6;
+}
+
+const cookieOpts = () =>
+  ({
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: sessionHours() * 3600,
+  });
 
 export async function createLoginToken(email: string, lang: string) {
   return new SignJWT({ email: normalizeEmail(email), lang, purpose: "login" })
@@ -21,23 +35,23 @@ export async function createLoginToken(email: string, lang: string) {
 export async function verifyLoginToken(token: string) {
   const { payload } = await jwtVerify(token, env.authSecret(), { algorithms: ["HS256"] });
   if (payload.purpose !== "login" || typeof payload.email !== "string") throw new Error("bad token");
-  return { email: payload.email, lang: payload.lang === "en" ? "en" : "de" };
+  return { email: normalizeEmail(payload.email), lang: payload.lang === "en" ? "en" : "de" };
 }
 
 export async function createSession(email: string) {
+  const hours = sessionHours();
   const jwt = await new SignJWT({ email: normalizeEmail(email), purpose: "session" })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(`${SESSION_DAYS}d`)
+    .setExpirationTime(`${hours}h`)
     .sign(env.authSecret());
   const jar = await cookies();
-  jar.set(SESSION_COOKIE, jwt, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: SESSION_DAYS * 24 * 3600,
-  });
+  jar.set(SESSION_COOKIE, jwt, cookieOpts());
+}
+
+/** Re-issues the session cookie so reloads within the window stay signed in (sliding idle timeout). */
+export async function touchSession(email: string) {
+  await createSession(email);
 }
 
 /** Returns the signed-in attendee, or null. Re-checks the allowlist so removing an address revokes access. */
@@ -48,13 +62,16 @@ export async function currentUser(): Promise<{ email: string } | null> {
   try {
     const { payload } = await jwtVerify(token, env.authSecret(), { algorithms: ["HS256"] });
     if (payload.purpose !== "session" || typeof payload.email !== "string") return null;
-    if (!(await isAllowed(payload.email))) return null;
-    return { email: payload.email };
+    const email = normalizeEmail(payload.email);
+    if (!(await isAllowed(email))) return null;
+    return { email };
   } catch {
     return null;
   }
 }
 
 export async function clearSession() {
-  (await cookies()).delete(SESSION_COOKIE);
+  const jar = await cookies();
+  jar.set(SESSION_COOKIE, "", { ...cookieOpts(), maxAge: 0 });
+  jar.delete(SESSION_COOKIE);
 }

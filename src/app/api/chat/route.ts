@@ -1,4 +1,4 @@
-import { currentUser } from "@/server/auth";
+import { currentUser, touchSession } from "@/server/auth";
 import { chatLog, hashAttendee, newChatRequestId } from "@/server/chat-log";
 import { env } from "@/server/env";
 import { retrieve, systemPrompt } from "@/server/knowledge";
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
   const t0 = Date.now();
   const user = await currentUser();
   if (!user) return new Response("unauthorized", { status: 401 });
+  await touchSession(user.email);
   if (!hit(`chat:${user.email}`, 40, 60 * 60_000)) return new Response("rate_limited", { status: 429 });
   const attendee = hashAttendee(user.email);
 

@@ -16,17 +16,16 @@ export async function POST(req: Request) {
   if (!hit(`login:${email}`, 5, 15 * 60_000)) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
-  // Only registered attendees get a link. The response is identical either way, so the endpoint
-  // can't be used to find out who is on the list.
-  if (await isAllowed(email)) {
-    const origin = env.siteUrl() ?? new URL(req.url).origin;
-    const token = await createLoginToken(email, lang);
-    try {
-      await sendMagicLink(email, `${origin}/api/auth/verify/?token=${encodeURIComponent(token)}`, lang);
-    } catch (err) {
-      console.error("[auth] magic link failed", err);
-      return NextResponse.json({ error: "send_failed" }, { status: 502 });
-    }
+  if (!(await isAllowed(email))) {
+    return NextResponse.json({ error: "not_allowed" }, { status: 403 });
+  }
+  const origin = env.siteUrl() ?? new URL(req.url).origin;
+  const token = await createLoginToken(email, lang);
+  try {
+    await sendMagicLink(email, `${origin}/api/auth/verify/?token=${encodeURIComponent(token)}`, lang);
+  } catch (err) {
+    console.error("[auth] magic link failed", err);
+    return NextResponse.json({ error: "send_failed" }, { status: 502 });
   }
   return NextResponse.json({ ok: true });
 }
