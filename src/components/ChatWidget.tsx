@@ -83,6 +83,16 @@ const T = {
   },
 };
 
+function stripStoredMeta(m: Msg): Msg {
+  if (m.role !== "assistant") return m;
+  const { text, meta } = splitChatStream(m.content);
+  return {
+    ...m,
+    content: text,
+    incomplete: Boolean(m.incomplete) || meta?.finishReason === "length",
+  };
+}
+
 /** Safe inline: [text](/path), **bold**, *emphasis*. */
 function inline(s: string, key: string): ReactNode[] {
   const parts: ReactNode[] = [];
@@ -161,7 +171,10 @@ export function ChatWidget({ lang }: { lang: Locale }) {
     }
     try {
       const saved = sessionStorage.getItem("pf-chat");
-      if (saved) setMessages(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved) as Msg[];
+        setMessages(parsed.map(stripStoredMeta));
+      }
     } catch {
       /* storage unavailable */
     }
@@ -372,7 +385,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
                       {m.role === "assistant" ? (
                         m.content ? (
                           <>
-                            <Rich text={m.content} />
+                            <Rich text={splitChatStream(m.content).text} />
                             {m.incomplete ? <p className="chat-incomplete">{t.incomplete}</p> : null}
                           </>
                         ) : (

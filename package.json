@@ -8,7 +8,8 @@
     "build:pdf": "next build && node scripts/build-pdf.mjs",
     "pdf": "node scripts/build-pdf.mjs",
     "start": "next start",
-    "allowlist": "node scripts/allowlist.mjs"
+    "allowlist": "node scripts/allowlist.mjs",
+    "test": "node --experimental-strip-types --experimental-default-type=module --test src/lib/chat-stream.test.ts"
   },
   "dependencies": {
     "jose": "^5.9.6",
