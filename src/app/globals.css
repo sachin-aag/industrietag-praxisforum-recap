@@ -338,6 +338,87 @@ details[open] > summary::before { content: "–"; }
 .chat-msg.is-assistant { align-self: flex-start; background: var(--white); border: 1px solid var(--rule); border-bottom-left-radius: 4px; }
 .chat-typing { color: var(--ink-3); font-style: italic; }
 .chat-incomplete { margin: .5em 0 0; font-size: 13px; color: var(--ink-3); font-style: italic; }
+.chat-msg.is-assistant:has(.chat-think) { min-width: min(292px, 94%); padding: 11px 12px 11px 11px; }
+.chat-think { display: flex; align-items: center; gap: 11px; min-height: 42px; }
+.chat-think-icon {
+  flex-shrink: 0; width: 42px; height: 42px; border-radius: 10px;
+  display: grid; place-items: center; color: var(--blue); background: #e8eefc;
+  overflow: hidden; transition: background-color .35s, color .35s;
+}
+.chat-think-icon.is-search { background: #e6f5fd; color: #0b7ec4; }
+.chat-think-icon.is-match { background: #f3e9fb; color: var(--violet); }
+.chat-think-icon.is-think { background: #fff6d9; color: #c98900; }
+.chat-think-icon.is-write { background: #fde8f1; color: var(--magenta); }
+.chat-think-copy { min-width: 0; }
+.chat-think-label { margin: 0; color: var(--ink); font-size: 14px; font-weight: 600; font-style: normal; line-height: 1.3; }
+.chat-think-dots { display: flex; gap: 5px; list-style: none; margin: 7px 0 0; padding: 0; }
+.chat-think-dots li { width: 6px; height: 6px; border-radius: 50%; background: #d5dbe8; }
+.chat-think-dots li.is-done { background: var(--blue); }
+.chat-think-dots li.is-now { background: var(--sky); }
+.think-line, .think-page-line, .think-ink { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.think-hi { fill: currentColor; opacity: .28; }
+.think-glow { fill: currentColor; opacity: .22; }
+.think-core { fill: currentColor; }
+.think-spark, .think-dot { fill: currentColor; }
+.chat-think-icon svg * { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .chat-think-icon { animation: think-pop .38s cubic-bezier(.2,.8,.2,1) both; }
+  .chat-think-label { animation: think-fade .32s ease both; }
+  .chat-think-dots li.is-now { animation: think-pulse 1.1s ease-in-out infinite; }
+  .think-line { stroke-dasharray: 12; stroke-dashoffset: 12; animation: think-draw .7s ease forwards; }
+  .think-line.l2 { animation-delay: .18s; }
+  .think-line.l3 { animation-delay: .34s; }
+  .think-glass { animation: think-scan 1.45s ease-in-out infinite; }
+  .think-page.back { animation: think-shuffle 1.8s ease-in-out infinite; }
+  .think-hi { animation: think-row 1.7s ease-in-out infinite; }
+  .think-glow { animation: think-breathe 1.6s ease-in-out infinite; }
+  .think-core { animation: think-core-pulse 1.6s ease-in-out infinite; }
+  .think-spark.s1 { animation: think-twinkle 1.2s ease-in-out infinite; }
+  .think-spark.s2 { animation: think-twinkle 1.4s ease-in-out .2s infinite; }
+  .think-spark.s3 { animation: think-twinkle 1.1s ease-in-out .4s infinite; }
+  .think-dot.d1 { animation: think-bounce .9s ease-in-out infinite; }
+  .think-dot.d2 { animation: think-bounce .9s ease-in-out .12s infinite; }
+  .think-dot.d3 { animation: think-bounce .9s ease-in-out .24s infinite; }
+  .think-pencil { animation: think-scribble 1.05s ease-in-out infinite; }
+  .think-ink { stroke-dasharray: 42; stroke-dashoffset: 42; animation: think-draw 1.4s ease-in-out infinite alternate; }
+}
+@keyframes think-pop { from { transform: scale(.86); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes think-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes think-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: .7; } }
+@keyframes think-draw { to { stroke-dashoffset: 0; } }
+@keyframes think-scan {
+  0%, 100% { transform: translate(-2px, -1px) rotate(-8deg); }
+  50% { transform: translate(3px, 2px) rotate(10deg); }
+}
+@keyframes think-shuffle {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-1.5px, 1px) rotate(-4deg); }
+}
+@keyframes think-row {
+  0%, 100% { transform: translateY(0); }
+  33% { transform: translateY(8px); }
+  66% { transform: translateY(16px); }
+}
+@keyframes think-breathe {
+  0%, 100% { transform: scale(1); opacity: .22; }
+  50% { transform: scale(1.18); opacity: .38; }
+}
+@keyframes think-core-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes think-twinkle {
+  0%, 100% { opacity: .25; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@keyframes think-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes think-scribble {
+  0%, 100% { transform: rotate(-6deg) translate(0, 0); }
+  50% { transform: rotate(8deg) translate(1px, 2px); }
+}
 .chat-input { display: flex; gap: 8px; align-items: flex-end; padding: 12px; border-top: 1px solid var(--rule); background: var(--white); }
 .chat-input textarea { flex: 1; resize: none; font: inherit; font-size: 15px; padding: 10px 12px; border: 1px solid #b9c3d8; border-radius: var(--radius); max-height: 120px; }
 .chat-input textarea:focus { outline: 3px solid var(--sun); outline-offset: 1px; border-color: var(--blue); }

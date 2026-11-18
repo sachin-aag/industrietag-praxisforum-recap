@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
+import { ThinkingStatus } from "@/components/ThinkingStatus";
 import { splitMarkdownBlocks } from "@/lib/assistant-markdown";
 import { splitChatStream } from "@/lib/chat-stream";
 import { normalizeEmail } from "@/lib/normalize-email";
@@ -173,7 +174,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem("pf-chat", JSON.stringify(messages.slice(-20)));
+      sessionStorage.setItem("pf-chat", JSON.stringify(messages.filter((m) => m.content.trim()).slice(-20)));
     } catch {
       /* storage unavailable */
     }
@@ -375,7 +376,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
                             {m.incomplete ? <p className="chat-incomplete">{t.incomplete}</p> : null}
                           </>
                         ) : (
-                          <p className="chat-typing">{t.thinking}</p>
+                          <ThinkingStatus lang={lang} fallback={t.thinking} />
                         )
                       ) : (
                         <p>{m.content}</p>
