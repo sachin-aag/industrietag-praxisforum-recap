@@ -1,11 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import { ThinkingStatus } from "@/components/ThinkingStatus";
+import { splitMarkdownBlocks } from "@/lib/assistant-markdown";
+import { splitChatStream } from "@/lib/chat-stream";
+import { normalizeEmail } from "@/lib/normalize-email";
 
-type Msg = { role: "user" | "assistant"; content: string };
-type Phase = "loading" | "anon" | "sent" | "chat";
+type Msg = { role: "user" | "assistant"; content: string; incomplete?: boolean };
+type Phase = "loading" | "anon" | "sent" | "denied" | "chat";
+
+const ACCESS_CONTACT = "sachin@gamechangerz.io";
 
 const T = {
   de: {
@@ -18,12 +23,15 @@ const T = {
     send: "Login-Link senden",
     sending: "Wird gesendet …",
     sentTitle: "Prüfen Sie Ihr Postfach",
-    sentBody: (e: string) => `Wenn ${e} als Teilnehmende registriert ist, ist ein Login-Link unterwegs. Er ist 20 Minuten gültig.`,
+    sentBody: (e: string) => `Wir haben einen Login-Link an ${e} gesendet. Er ist 20 Minuten gültig.`,
     again: "Andere Adresse verwenden",
     expired: "Der Login-Link ist abgelaufen oder ungültig. Fordern Sie einfach einen neuen an.",
     errSend: "Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
     errRate: "Zu viele Versuche. Bitte warten Sie einige Minuten.",
     errInvalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    deniedTitle: "Kein Zugang für diese E-Mail",
+    deniedBody:
+      "Diese E-Mail-Adresse ist nicht für den Assistenten freigeschaltet. Wenn Sie am Praxisforum teilgenommen haben, schreiben Sie bitte an",
     hello: "Fragen Sie mich zu Vorträgen, Referierenden und Inhalten des Praxisforums vom 10. November 2026.",
     suggestions: ["Was waren die wichtigsten Erkenntnisse des Tages?", "Was hat Hilti zum Bohrroboter gezeigt?", "In welchen Vorträgen ging es um Energiedaten?"],
     placeholder: "Ihre Frage zum Event …",
@@ -33,6 +41,7 @@ const T = {
     errChatRate: "Sie haben viele Fragen gestellt. Bitte versuchen Sie es in einer Weile erneut.",
     errQuota: "Sie haben Ihr Kontingent an Fragen aufgebraucht. Vielen Dank fürs Nutzen des Assistenten!",
     errUnavailable: "Der Assistent ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    incomplete: "Die Antwort wurde unterbrochen. Bitte senden Sie die Frage erneut.",
     left: (n: number) => (n === 1 ? "Noch 1 Frage" : `Noch ${n} Fragen`),
     signedIn: "Angemeldet als",
     logout: "Abmelden",
@@ -48,12 +57,15 @@ const T = {
     send: "Send sign-in link",
     sending: "Sending …",
     sentTitle: "Check your inbox",
-    sentBody: (e: string) => `If ${e} is registered as an attendee, a sign-in link is on its way. It is valid for 20 minutes.`,
+    sentBody: (e: string) => `We sent a sign-in link to ${e}. It is valid for 20 minutes.`,
     again: "Use a different address",
     expired: "The sign-in link has expired or is invalid. Just request a new one.",
     errSend: "The email could not be sent. Please try again later.",
     errRate: "Too many attempts. Please wait a few minutes.",
     errInvalid: "Please enter a valid email address.",
+    deniedTitle: "No access for this email",
+    deniedBody:
+      "This email address is not authorised for the assistant. If you attended the Praxisforum, you can write to",
     hello: "Ask me about the talks, speakers and content of the Praxisforum on 10 November 2026.",
     suggestions: ["What were the key takeaways of the day?", "What did Hilti show about the drilling robot?", "Which talks covered energy data?"],
     placeholder: "Your question about the event …",
@@ -63,6 +75,7 @@ const T = {
     errChatRate: "You've asked a lot of questions. Please try again in a while.",
     errQuota: "You've used up your question allowance. Thanks for using the assistant!",
     errUnavailable: "The assistant is unavailable right now. Please try again later.",
+    incomplete: "The answer was cut off. Please send the question again.",
     left: (n: number) => (n === 1 ? "1 question left" : `${n} questions left`),
     signedIn: "Signed in as",
     logout: "Sign out",
@@ -70,39 +83,40 @@ const T = {
   },
 };
 
-/** Minimal, safe rendering: paragraphs, "- " lists, **bold** and [text](/internal/link). */
+/** Safe inline: [text](/path), **bold**, *emphasis*. */
+function inline(s: string, key: string): ReactNode[] {
+  const parts: ReactNode[] = [];
+  const re = /\[([^\]]+)\]\((\/[^)\s]*)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let i = 0;
+  while ((m = re.exec(s))) {
+    if (m.index > last) parts.push(s.slice(last, m.index));
+    if (m[1]) parts.push(<a key={`${key}-${i++}`} href={m[2]}>{m[1]}</a>);
+    else if (m[3]) parts.push(<strong key={`${key}-${i++}`}>{m[3]}</strong>);
+    else parts.push(<em key={`${key}-${i++}`}>{m[4]}</em>);
+    last = m.index + m[0].length;
+  }
+  if (last < s.length) parts.push(s.slice(last));
+  return parts;
+}
+
+/** Paragraphs and "- " lists; tolerates common LLM markdown mistakes. */
 function Rich({ text }: { text: string }) {
-  const inline = (s: string, key: string) => {
-    const parts: React.ReactNode[] = [];
-    const re = /\[([^\]]+)\]\((\/[^)\s]*)\)|\*\*([^*]+)\*\*/g;
-    let last = 0;
-    let m: RegExpExecArray | null;
-    let i = 0;
-    while ((m = re.exec(s))) {
-      if (m.index > last) parts.push(s.slice(last, m.index));
-      if (m[1]) parts.push(<a key={`${key}-${i++}`} href={m[2]}>{m[1]}</a>);
-      else parts.push(<strong key={`${key}-${i++}`}>{m[3]}</strong>);
-      last = m.index + m[0].length;
-    }
-    if (last < s.length) parts.push(s.slice(last));
-    return parts;
-  };
-  const blocks = text.trim().split(/\n{2,}/);
+  const blocks = splitMarkdownBlocks(text);
   return (
     <>
-      {blocks.map((b, bi) => {
-        const lines = b.split("\n");
-        if (lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) {
-          return (
-            <ul key={bi}>
-              {lines.map((l, li) => (
-                <li key={li}>{inline(l.replace(/^\s*([-*•]|\d+\.)\s+/, ""), `${bi}-${li}`)}</li>
-              ))}
-            </ul>
-          );
-        }
-        return <p key={bi}>{lines.flatMap((l, li) => (li ? [<br key={`br${li}`} />, ...inline(l, `${bi}-${li}`)] : inline(l, `${bi}-${li}`)))}</p>;
-      })}
+      {blocks.map((b, bi) =>
+        b.kind === "ul" ? (
+          <ul key={bi}>
+            {b.items.map((item, li) => (
+              <li key={li}>{inline(item, `${bi}-${li}`)}</li>
+            ))}
+          </ul>
+        ) : (
+          <p key={bi}>{inline(b.text, `p-${bi}`)}</p>
+        )
+      )}
     </>
   );
 }
@@ -124,7 +138,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
 
   const refreshUser = useCallback(async () => {
     try {
-      const r = await fetch("/api/auth/me/", { cache: "no-store" });
+      const r = await fetch("/api/auth/me/", { cache: "no-store", credentials: "same-origin" });
       const j = (await r.json()) as { user: { email: string } | null; questionsLeft: number | null };
       setUser(j.user?.email ?? null);
       setLeft(j.questionsLeft);
@@ -153,9 +167,10 @@ export function ChatWidget({ lang }: { lang: Locale }) {
     }
   }, [t.expired]);
 
+  // Restore signed-in state after a full page reload (httpOnly session cookie).
   useEffect(() => {
-    if (open && phase === "loading") refreshUser();
-  }, [open, phase, refreshUser]);
+    refreshUser();
+  }, [refreshUser]);
 
   useEffect(() => {
     try {
@@ -177,15 +192,31 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   async function requestLink(e: React.FormEvent) {
     e.preventDefault();
     setNotice(null);
+    const normalized = normalizeEmail(email);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+      setNotice(t.errInvalid);
+      return;
+    }
     setBusy(true);
     try {
       const r = await fetch("/api/auth/request/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, lang }),
+        credentials: "same-origin",
+        cache: "no-store",
+        body: JSON.stringify({ email: normalized, lang }),
       });
-      if (r.ok) setPhase("sent");
-      else setNotice(r.status === 429 ? t.errRate : r.status === 400 ? t.errInvalid : t.errSend);
+      const body = (await r.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (body.error === "not_allowed" || r.status === 403) {
+        setPhase("denied");
+        return;
+      }
+      if (r.ok && body.ok) {
+        setEmail(normalized);
+        setPhase("sent");
+        return;
+      }
+      setNotice(r.status === 429 ? t.errRate : r.status === 400 ? t.errInvalid : t.errSend);
     } catch {
       setNotice(t.errSend);
     } finally {
@@ -204,6 +235,8 @@ export function ChatWidget({ lang }: { lang: Locale }) {
       const r = await fetch("/api/chat/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        cache: "no-store",
         body: JSON.stringify({ messages: next, lang }),
       });
       if (r.status === 401) {
@@ -223,11 +256,17 @@ export function ChatWidget({ lang }: { lang: Locale }) {
       let acc = "";
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
-        acc += dec.decode(value, { stream: true });
-        setMessages([...next, { role: "assistant", content: acc }]);
+        if (value) acc += dec.decode(value, { stream: true });
+        if (done) {
+          acc += dec.decode();
+          break;
+        }
+        setMessages([...next, { role: "assistant", content: splitChatStream(acc).text }]);
       }
-      if (!acc.trim()) throw new Error("empty");
+      const { text, meta } = splitChatStream(acc);
+      if (!text.trim()) throw new Error("empty");
+      const incomplete = !meta || meta.finishReason === "length";
+      setMessages([...next, { role: "assistant", content: text, incomplete }]);
     } catch (err) {
       const code = err instanceof Error ? err.message : "";
       const text = code === "quota" ? t.errQuota : code === "429" ? t.errChatRate : code === "503" ? t.errUnavailable : t.errChat;
@@ -297,6 +336,20 @@ export function ChatWidget({ lang }: { lang: Locale }) {
             </div>
           ) : null}
 
+          {phase === "denied" ? (
+            <div className="chat-body chat-login">
+              <p className="chat-notice" role="alert">
+                <strong>{t.deniedTitle}</strong>
+                <br />
+                {t.deniedBody}{" "}
+                <a href={`mailto:${ACCESS_CONTACT}`}>{ACCESS_CONTACT}</a>.
+              </p>
+              <button type="button" className="chat-link" onClick={() => setPhase("anon")}>
+                {t.again}
+              </button>
+            </div>
+          ) : null}
+
           {phase === "chat" ? (
             <>
               <div className="chat-body chat-list" ref={listRef} aria-live="polite">
@@ -318,7 +371,10 @@ export function ChatWidget({ lang }: { lang: Locale }) {
                     <div key={i} className={`chat-msg is-${m.role}`}>
                       {m.role === "assistant" ? (
                         m.content ? (
-                          <Rich text={m.content} />
+                          <>
+                            <Rich text={m.content} />
+                            {m.incomplete ? <p className="chat-incomplete">{t.incomplete}</p> : null}
+                          </>
                         ) : (
                           <ThinkingStatus lang={lang} fallback={t.thinking} />
                         )

@@ -48,7 +48,8 @@ async function redis(...commands) {
 }
 
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
-const norm = (e) => e.trim().replace(/^<|>$/g, "").toLowerCase();
+/** Keep in sync with src/server/email.ts */
+const norm = (e) => e.trim().replace(/^<|>$/g, "").normalize("NFKC").toLowerCase();
 
 const [cmd, ...args] = process.argv.slice(2);
 const emails = (list) => [...new Set(list.flatMap((a) => a.match(EMAIL) ?? []).map(norm))];
