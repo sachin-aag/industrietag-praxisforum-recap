@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import { ThinkingStatus } from "@/components/ThinkingStatus";
-import { splitMarkdownBlocks } from "@/lib/assistant-markdown";
+import { splitMarkdownBlocks, tokenizeInline, type InlineToken } from "@/lib/assistant-markdown";
 import { splitChatStream } from "@/lib/chat-stream";
 import { normalizeEmail } from "@/lib/normalize-email";
 
@@ -93,22 +93,33 @@ function stripStoredMeta(m: Msg): Msg {
   };
 }
 
+function renderTokens(tokens: InlineToken[], key: string): ReactNode[] {
+  return tokens.map((tok, i) => {
+    const k = `${key}-${i}`;
+    switch (tok.kind) {
+      case "text":
+        return tok.text;
+      case "link":
+        return (
+          <a key={k} href={tok.href}>
+            {renderTokens(tok.children, k)}
+          </a>
+        );
+      case "strong":
+        return <strong key={k}>{renderTokens(tok.children, k)}</strong>;
+      case "em":
+        return <em key={k}>{renderTokens(tok.children, k)}</em>;
+      default: {
+        const _: never = tok;
+        return _;
+      }
+    }
+  });
+}
+
 /** Safe inline: [text](/path), **bold**, *emphasis*. */
 function inline(s: string, key: string): ReactNode[] {
-  const parts: ReactNode[] = [];
-  const re = /\[([^\]]+)\]\((\/[^)\s]*)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  let i = 0;
-  while ((m = re.exec(s))) {
-    if (m.index > last) parts.push(s.slice(last, m.index));
-    if (m[1]) parts.push(<a key={`${key}-${i++}`} href={m[2]}>{m[1]}</a>);
-    else if (m[3]) parts.push(<strong key={`${key}-${i++}`}>{m[3]}</strong>);
-    else parts.push(<em key={`${key}-${i++}`}>{m[4]}</em>);
-    last = m.index + m[0].length;
-  }
-  if (last < s.length) parts.push(s.slice(last));
-  return parts;
+  return renderTokens(tokenizeInline(s), key);
 }
 
 /** Paragraphs and "- " lists; tolerates common LLM markdown mistakes. */
